@@ -1,4 +1,5 @@
-﻿using InventoryControl.Application.UseCases.Products;
+﻿using InventoryControl.Application.UseCases.Categories;
+using InventoryControl.Application.UseCases.Products;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace InventoryControl.Application
@@ -8,8 +9,9 @@ namespace InventoryControl.Application
         public static IServiceCollection AddApplicationHierarchy(this IServiceCollection services)
         {
             services.AddScoped<CreateProductUseCase>();
+            services.AddScoped<CreateCategoryUseCase>();
             // ...
-            
+
             return services;
         }
     }

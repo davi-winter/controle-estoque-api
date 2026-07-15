@@ -8,7 +8,7 @@ namespace InventoryControl.Infrastructure.Context.Configurations
     {
         public void Configure(EntityTypeBuilder<StockMovement> builder)
         {
-            builder.ToTable("StockMovements");
+            builder.ToTable("StockMovement");
 
             builder.HasKey(sm => sm.Id);
 

@@ -1,4 +1,4 @@
-﻿using InventoryControl.Application.DTOs;
+﻿using InventoryControl.Application.DTOs.Products;
 using InventoryControl.Application.UseCases.Products;
 
 namespace InventoryControl.API.Endpoints

@@ -8,7 +8,7 @@ namespace InventoryControl.Infrastructure.Context.Configurations
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
-            builder.ToTable("Categories");
+            builder.ToTable("Category");
 
             builder.HasKey(c => c.Id);
 

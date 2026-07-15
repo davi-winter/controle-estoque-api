@@ -1,4 +1,4 @@
-﻿namespace InventoryControl.Application.DTOs
+﻿namespace InventoryControl.Application.DTOs.Products
 {
     public record ProductResponse(
         Guid Id,

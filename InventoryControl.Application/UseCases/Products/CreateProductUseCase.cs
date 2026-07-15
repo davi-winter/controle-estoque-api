@@ -1,4 +1,4 @@
-﻿using InventoryControl.Application.DTOs;
+﻿using InventoryControl.Application.DTOs.Products;
 using InventoryControl.Domain.Entities;
 using InventoryControl.Domain.Interfaces;
 
@@ -7,9 +7,13 @@ namespace InventoryControl.Application.UseCases.Products
     public class CreateProductUseCase
     {
         private readonly IProductRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateProductUseCase(IProductRepository repository)
-            => _repository = repository;
+        public CreateProductUseCase(IProductRepository repository, IUnitOfWork unitOfWork)
+        {
+            _repository = repository;
+            _unitOfWork = unitOfWork;
+        }
 
         public async Task<ProductResponse> ExecuteAsync(CreateProductRequest request)
         {
@@ -25,6 +29,7 @@ namespace InventoryControl.Application.UseCases.Products
             };
 
             await _repository.AddAsync(product);
+            await _unitOfWork.CommitAsync();
 
             return new ProductResponse(
                 product.Id,

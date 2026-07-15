@@ -8,7 +8,7 @@ namespace InventoryControl.Infrastructure.Context.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("Users");
+            builder.ToTable("User");
 
             builder.HasKey(u => u.Id);
 
