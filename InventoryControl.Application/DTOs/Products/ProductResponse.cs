@@ -3,6 +3,8 @@
     public record ProductResponse(
         Guid Id,
         string Name,
+        string Sku,
         string Description, 
-        decimal Price);
+        decimal Price,
+        int CurrentStock);
 }

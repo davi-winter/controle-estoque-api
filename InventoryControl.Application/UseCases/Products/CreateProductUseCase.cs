@@ -34,8 +34,10 @@ namespace InventoryControl.Application.UseCases.Products
             return new ProductResponse(
                 product.Id,
                 product.Name,
+                product.Sku,
                 product.Description,
-                product.Price
+                product.Price,
+                product.CurrentStock
             );
         }
     }
