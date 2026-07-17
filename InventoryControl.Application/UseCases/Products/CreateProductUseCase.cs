@@ -36,8 +36,7 @@ namespace InventoryControl.Application.UseCases.Products
                 product.Name,
                 product.Sku,
                 product.Description,
-                product.Price,
-                product.CurrentStock
+                product.Price
             );
         }
     }

@@ -39,7 +39,17 @@ namespace InventoryControl.API.Endpoints
                 return Results.Ok(response);
             })
             .WithName("GetLowStockProducts")
-            .Produces<IEnumerable<ProductResponse>>(StatusCodes.Status200OK);
+            .Produces<IEnumerable<ProductWithCurrentStockResponse>>(StatusCodes.Status200OK);
+
+            // GET /api/products/products-with-category
+            group.MapGet("/products-with-category/{categoryId}", async ([FromQuery] Guid categoryId, GetProductsWithCategoryUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(categoryId);
+
+                return Results.Ok(response);
+            })
+            .WithName("GetProductsWithCategory")
+            .Produces<IEnumerable<ProductWithCategoryResponse>>(StatusCodes.Status200OK);
         }
     }
 }

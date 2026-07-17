@@ -11,6 +11,7 @@ namespace InventoryControl.Application
             services.AddScoped<CreateProductUseCase>();
             services.AddScoped<GetBySkuUseCase>();
             services.AddScoped<GetLowStockProductsUseCase>();
+            services.AddScoped<GetProductsWithCategoryUseCase>();
             services.AddScoped<CreateCategoryUseCase>();
             // ...
 

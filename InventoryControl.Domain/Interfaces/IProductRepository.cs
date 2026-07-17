@@ -6,6 +6,6 @@ namespace InventoryControl.Domain.Interfaces
     {
         Task<Product?> GetBySkuAsync(string sku);
         Task<IEnumerable<Product>> GetLowStockProductsAsync(int limit);
-        Task<IEnumerable<Product>> GetProductsWithCategoryAsync();
+        Task<IEnumerable<Product>> GetProductsWithCategoryAsync(Guid categoryId);
     }
 }
