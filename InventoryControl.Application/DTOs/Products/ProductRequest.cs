@@ -8,4 +8,11 @@
         int CurrentStock,
         Guid CategoryId
     );
+
+    public record UpdateStockRequest(
+        Guid ProductId,
+        int Quantity,
+        bool IsAddition,
+        string Observation
+    );
 }

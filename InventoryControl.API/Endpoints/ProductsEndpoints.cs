@@ -21,6 +21,32 @@ namespace InventoryControl.API.Endpoints
             .WithName("CreateProduct")
             .Produces<ProductResponse>(StatusCodes.Status201Created);
 
+            // PUT /api/products/{id}
+            group.MapPut("/{id}", async (Guid id, CreateProductRequest request, UpdateProductUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(id, request);
+
+                return Results.Ok(response);
+            })
+            .WithName("UpdateProduct")
+            .Produces<ProductResponse>(StatusCodes.Status200OK);
+
+            // PATCH /api/products/update-stock
+            group.MapPatch("/update-stock", async (UpdateStockRequest request, UpdateStockUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(request);
+
+                return Results.Ok(response);
+            });
+
+            // DELETE /api/products/{id}
+            group.MapDelete("/{id}", async (Guid id, DeleteProductUseCase useCase) =>
+            {
+                await useCase.ExecuteAsync(id);
+
+                return Results.NoContent();
+            });
+
             //GET /api/products/{sku}
             group.MapGet("/{sku}", async ([FromQuery] string sku, GetBySkuUseCase useCase) =>
             {
