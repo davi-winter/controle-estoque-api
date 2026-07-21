@@ -1,5 +1,5 @@
 ﻿using InventoryControl.Domain.Entities;
-using InventoryControl.Domain.Interfaces;
+using InventoryControl.Domain.Interfaces.Repositories;
 using InventoryControl.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,6 @@
 ﻿using InventoryControl.Application.DTOs.Products;
 using InventoryControl.Domain.Entities;
-using InventoryControl.Domain.Interfaces;
+using InventoryControl.Domain.Interfaces.Repositories;
 
 namespace InventoryControl.Application.UseCases.Products
 {

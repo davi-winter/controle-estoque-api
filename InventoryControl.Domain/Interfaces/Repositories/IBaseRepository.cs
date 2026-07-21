@@ -1,4 +1,4 @@
-﻿namespace InventoryControl.Domain.Interfaces
+﻿namespace InventoryControl.Domain.Interfaces.Repositories
 {
     public interface IBaseRepository<T> where T : class
     {

@@ -1,4 +1,4 @@
-﻿using InventoryControl.Domain.Interfaces;
+﻿using InventoryControl.Domain.Interfaces.Repositories;
 using InventoryControl.Infrastructure.Context;
 
 namespace InventoryControl.Infrastructure.Repositories
