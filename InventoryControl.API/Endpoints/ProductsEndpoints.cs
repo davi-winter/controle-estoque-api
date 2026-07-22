@@ -45,7 +45,8 @@ namespace InventoryControl.API.Endpoints
                 await useCase.ExecuteAsync(id);
 
                 return Results.NoContent();
-            });
+            })
+            .WithName("DeleteProduct");
 
             //GET /api/products/{sku}
             group.MapGet("/{sku}", async ([FromQuery] string sku, GetBySkuUseCase useCase) =>

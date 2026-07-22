@@ -21,7 +21,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("JwtSettings"));
 
-var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:JwtKey"]);
+var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:JwtKey"]!);
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

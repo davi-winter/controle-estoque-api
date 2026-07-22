@@ -10,6 +10,8 @@ namespace InventoryControl.Application
         public static IServiceCollection AddApplicationHierarchy(this IServiceCollection services)
         {
             services.AddScoped<CreateUserUseCase>();
+            services.AddScoped<UpdateUserUseCase>();
+            services.AddScoped<DeleteUserUseCase>();
             services.AddScoped<LoginUseCase>();
             services.AddScoped<CreateProductUseCase>();
             services.AddScoped<UpdateProductUseCase>();

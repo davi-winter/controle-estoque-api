@@ -6,35 +6,34 @@ using SecureIdentity.Password;
 
 namespace InventoryControl.Application.UseCases.Users
 {
-    public class CreateUserUseCase
+    public class UpdateUserUseCase
     {
         private readonly IUserRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateUserUseCase(IUserRepository repository, IUnitOfWork unitOfWork)
+        public UpdateUserUseCase(IUserRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<UserResponse>> ExecuteAsync(CreateUserRequest request)
+        public async Task<Result<UserResponse>> ExecuteAsync(Guid userId, CreateUserRequest request)
         {
             var userValidation = new UserValidation(_repository);
 
+            var user = await _repository.GetByIdAsync(userId);
+
+            if (user == null)
+                return Result<UserResponse>.Failure(new Error("User.NotFound", "Usuário não encontrado."));
+
             if (string.IsNullOrWhiteSpace(request.Username))
                 return Result<UserResponse>.Failure(new Error("User.UsernameRequired", "O nome de usuário é obrigatório."));
-
-            if (!userValidation.IsUsernameUnique(request.Username))
-                return Result<UserResponse>.Failure(new Error("User.UsernameExists", "O nome de usuário informado já está em uso."));
 
             if (string.IsNullOrWhiteSpace(request.Email))
                 return Result<UserResponse>.Failure(new Error("User.EmailRequired", "O email é obrigatório."));
 
             if (!userValidation.IsValidEmailFormat(request.Email))
                 return Result<UserResponse>.Failure(new Error("User.InvalidEmail", "O email informado é inválido."));
-
-            if (!userValidation.IsEmailUnique(request.Email))
-                return Result<UserResponse>.Failure(new Error("User.EmailExists", "O email informado já está em uso."));
 
             if (string.IsNullOrWhiteSpace(request.Password))
                 return Result<UserResponse>.Failure(new Error("User.PasswordRequired", "A senha é obrigatória."));
@@ -48,20 +47,15 @@ namespace InventoryControl.Application.UseCases.Users
             if (!Enum.TryParse<User.UserRole>(request.Role, ignoreCase: true, out var userRole))
                 return Result<UserResponse>.Failure(new Error("User.InvalidRole", "A função informada é inválida. Aplique um dos seguintes valores: 'Admin', 'Manager' ou 'Operator'"));
 
-            var user = new User
-            {
-                Id = Guid.NewGuid(),
-                Username = request.Username,
-                Email = request.Email,
-                PasswordHash = PasswordHasher.Hash(request.Password),
-                Role = userRole.ToString().ToLower()
-            };
+            user.Username = request.Username;
+            user.Email = request.Email;
+            user.PasswordHash = PasswordHasher.Hash(request.Password);
+            user.Role = request.Role.ToLower();
 
-            await _repository.AddAsync(user);
+            _repository.Update(user);
             await _unitOfWork.CommitAsync();
 
-            return Result<UserResponse>.Success(
-                new UserResponse(
+            return Result<UserResponse>.Success(new UserResponse(
                 user.Id,
                 user.Username,
                 user.Email,

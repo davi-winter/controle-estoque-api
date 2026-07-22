@@ -28,6 +28,9 @@ namespace InventoryControl.Infrastructure.Context.Configurations
                 .IsRequired()
                 .HasMaxLength(30);
 
+            builder.HasIndex(u => u.Username)
+                .IsUnique();
+
             builder.HasIndex(u => u.Email)
                 .IsUnique();
         }

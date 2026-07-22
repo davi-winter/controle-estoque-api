@@ -1,0 +1,23 @@
+insert [#tempUser] ([Id],[Username],[Email],[PasswordHash],[Role],[CreatedAt])
+select '{825f284c-1e02-482a-a22c-29738a3f603a}',N'fulanosilva',N'fulano.silva@gmail.com',N'10000.9pUQ0Rca5aGfkbkOC0VgmQ==.7fItASzxNmFTP2nflwdNlVzu4JRah4Pu8s0asjZ0w3w=',N'manager','2026-07-21 20:10:14.8482652' UNION ALL
+select '{4a569fd1-1121-446c-b59d-aef8bbe1afc4}',N'siclanoborges',N'siclano.borges@gmail.com',N'10000.SouRGXKBee2v6VqW3zGDcQ==.GTS3mPjwqUWOtB4FaUjzDAd+WT7s+7y+/49GpH8sTCI=',N'operator','2026-07-22 18:54:07.2452929' UNION ALL
+select '{4a29ec04-3203-44e2-a927-d23f421a0959}',N'davi.winter',N'dwin20@gmail.com',N'$2a$12$iLO4EmM720Ji0JeZ85CWXuajoMd3CZIa9xPsDpYw1mkE2bNm/5RtW',N'admin','2026-07-17 19:58:43.6766667';
+
+insert [#tempCategory] ([Id],[Name],[Description],[IsActive])
+select '{c036d8d5-13fb-4f75-ab17-2be7cbc41c1f}',N'Informática',N'Dispositivos, gadgets, componentes de áudio, vídeo, automação residencial e tecnologia portátil.',1 UNION ALL
+select '{a3fd833c-65d7-420a-964a-feaa0caa0dea}',N'Eletrodomésticos',N' Aparelhos mecânicos ou elétricos utilizados para realizar tarefas domésticas diárias. Exemplos incluem geladeiras, fogões, máquinas de lavar, micro-ondas e ar-condicionado.',1;
+
+insert [#tempProduct] ([Id],[Name],[Sku],[Description],[Price],[CurrentStock],[CategoryId])
+select '{e62883d8-89f1-4ec0-b07a-10ea3d7ed6a5}',N'Micro-ondas Electrolux 34 Litros',N'ELET-MIC-ELE-MEF41',N'Forno micro-ondas com painel intuitivo, menu fácil para receitas rápidas e capacidade interna ideal para famílias maiores.',900.00,15,'{a3fd833c-65d7-420a-964a-feaa0caa0dea}' UNION ALL
+select '{4465b9a8-b10c-4a75-8301-4abcec6e18cf}',N'Notebook Gamer Dell G15',N'NTB-DEL-G15-I7-16GB-512GB-PT',N'Notebook de alto desempenho equipado com processador Intel Core i7, 16GB de memória RAM, armazenamento SSD de 512GB e placa de vídeo dedicada. Ideal para jogos e programas pesados. Cor preta.',5000.00,10,'{c036d8d5-13fb-4f75-ab17-2be7cbc41c1f}' UNION ALL
+select '{75eb2397-3615-435c-a9e2-525326e76357}',N'Máquina de Lavar Roupa Consul 15kg',N'ELET-LAV-CON-CWE15',N'Lavadora com sistema de ciclo rápido, dispenser específico para sabão e amaciante e controle automático de nível de água.',1700.00,8,'{a3fd833c-65d7-420a-964a-feaa0caa0dea}' UNION ALL
+select '{f4b80513-9041-4751-94b1-60dae8e8a859}',N'Mouse Sem Fio Logitech MX Master 3S',N'MOU-LOG-MXM3S-GRAF',N'Mouse ergonômico sem fio com sensor de 8000 DPI, tecnologia de rolagem ultrarrápida MagSpeed e cliques silenciosos. Compatível com Windows e macOS.',200.00,30,'{c036d8d5-13fb-4f75-ab17-2be7cbc41c1f}' UNION ALL
+select '{88deaad8-7361-4fd9-ab08-72c23040272f}',N'Refrigerador Brastemp Frost Free Inverse 591 Litros Inox',N'ELET-REF-BRA-BRE85',N'Geladeira com design Inverse, tecnologia Xpert Inverter para economia de energia, Smart Flow para distribuição uniforme do ar frio e função Turbo Ice.',4700.00,10,'{a3fd833c-65d7-420a-964a-feaa0caa0dea}' UNION ALL
+select '{47a03625-3f40-4aea-904a-8c814d92b62e}',N'Monitor Gamer Curvo 27" Samsung Odyssey',N'MON-SAM-ODYS-27CRV-165HZ',N'Monitor curvo de 27 polegadas com resolução Full HD, taxa de atualização de 165Hz e tempo de resposta de 1ms. Oferece imersão visual e fluidez para gamers.',2000.00,12,'{c036d8d5-13fb-4f75-ab17-2be7cbc41c1f}' UNION ALL
+select '{ef7c173a-aae5-454d-b885-9a8cf4e36b7d}',N'Fogão de Embutir 5 Bocas Electrolux Experience com Mesa de Vidro',N'ELET-FOG-ELE-5BV',N'Fogão com isolamento térmico aprimorado, queimadores de alta eficiência e design moderno com mesa de vidro.',1700.00,8,'{a3fd833c-65d7-420a-964a-feaa0caa0dea}' UNION ALL
+select '{ecf2c293-2cdf-4581-a15b-cdabacdd4465}',N'Teclado Mecânico Gamer Logitech G413',N'TEC-LOG-G413-MEQ-ABNT2',N'Teclado mecânico com iluminação LED vermelha, chassi em liga de alumínio, switches táteis e layout padrão ABNT2. Proporciona maior precisão e durabilidade.',800.00,20,'{c036d8d5-13fb-4f75-ab17-2be7cbc41c1f}' UNION ALL
+select '{8b4d70fe-93b4-42c4-8ae7-cf318ce814e8}',N'Roteador Wi-Fi 6 TP-Link Archer AX55',N'ROT-TPL-AX55-DUAL-GBIT',N'Roteador Gigabit Dual-Band com tecnologia Wi-Fi 6 (802.11ax), cobrindo grandes áreas com estabilidade. Suporta múltiplos dispositivos conectados simultaneamente.',700.00,10,'{c036d8d5-13fb-4f75-ab17-2be7cbc41c1f}';
+
+insert [#tempStockMovement] ([Id],[ProductId],[Quantity],[Type],[MovedAt],[Observation],[UserId])
+select '{4650acfa-a988-4f10-b6fb-30a0c44c8bd9}','{47a03625-3f40-4aea-904a-8c814d92b62e}',3,1,'2026-07-17 20:15:49.7536640',N'Chegou mais 3 unidades','{4a29ec04-3203-44e2-a927-d23f421a0959}' UNION ALL
+select '{6420a140-a883-42c5-aa10-5e151476eb25}','{47a03625-3f40-4aea-904a-8c814d92b62e}',3,2,'2026-07-17 20:16:49.4815902',N'Chegou mais 3 unidades por engano, foi devolvido','{4a29ec04-3203-44e2-a927-d23f421a0959}';

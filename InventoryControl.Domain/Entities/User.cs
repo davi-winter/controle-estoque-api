@@ -6,7 +6,14 @@
         public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
-        public string Role { get; set; } = "Employee";
+        public string Role { get; set; } = UserRole.Operator.ToString();
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public enum UserRole
+        {
+            Admin,
+            Manager,
+            Operator
+        }
     }
 }

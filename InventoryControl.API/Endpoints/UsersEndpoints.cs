@@ -1,12 +1,8 @@
-﻿using InventoryControl.Application.DTOs.Categories;
+﻿using InventoryControl.Application.DTOs.Products;
 using InventoryControl.Application.DTOs.Users;
-using InventoryControl.Application.UseCases.Categories;
+using InventoryControl.Application.UseCases.Products;
 using InventoryControl.Application.UseCases.Users;
-using InventoryControl.Application.Validations;
-using Microsoft.OpenApi;
 using System.Security.Claims;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace InventoryControl.API.Endpoints
 {
@@ -17,22 +13,12 @@ namespace InventoryControl.API.Endpoints
             var group = app.MapGroup("/api/users")
                            .WithTags("Users");
 
-            // POST /api/users
-            group.MapPost("/", async (CreateUserRequest request, CreateUserUseCase useCase) =>
-            {
-                var response = await useCase.ExecuteAsync(request);
-
-                return Results.Created($"/api/users/{response.Id}", response);
-            })
-            .WithName("CreateUser")
-            .Produces<UserResponse>(StatusCodes.Status201Created);
-
             // POST /api/users/login
             group.MapPost("/login", async (LoginRequest request, LoginUseCase useCase) =>
             {
                 var response = await useCase.ExecuteAsync(request);
 
-                if (response.IsFailure)
+                if (response?.IsFailure == true)
                 {
                     switch (response.Error?.Code)
                     {
@@ -45,10 +31,51 @@ namespace InventoryControl.API.Endpoints
                     }
                 }
 
-                return Results.Ok(response.Value);
+                return Results.Ok(response?.Value);
             })
             .WithName("Login")
             .Produces<LoginResponse>(StatusCodes.Status200OK);
+
+            // POST /api/users
+            group.MapPost("/", async (CreateUserRequest request, CreateUserUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(request);
+
+                if (response?.IsFailure == true)
+                    return Results.BadRequest(response.Error);
+
+                return Results.Created($"/api/users/{response?.Value?.Id}", response?.Value);
+            })
+            .WithName("CreateUser")
+            .Produces<UserResponse>(StatusCodes.Status201Created)
+            .RequireAuthorization();
+
+            // PUT /api/users/{id}
+            group.MapPut("/{id}", async (Guid id, CreateUserRequest request, UpdateUserUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(id, request);
+
+                if (response?.IsFailure == true)
+                    return Results.BadRequest(response.Error);
+
+                return Results.Ok(response?.Value);
+            })
+            .WithName("UpdateUser")
+            .Produces<UserResponse>(StatusCodes.Status200OK)
+            .RequireAuthorization();
+
+            // DELETE /api/users/{id}
+            group.MapDelete("/{id}", async (Guid id, DeleteUserUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(id);
+
+                if (response?.IsFailure == true)
+                    return Results.BadRequest(response.Error);
+
+                return Results.NoContent();
+            })
+            .WithName("DeleteUser")
+            .RequireAuthorization();
 
             // GET /api/users/me (em testes...)
             group.MapGet("/me", async (ClaimsPrincipal user) =>

@@ -160,6 +160,9 @@ namespace InventoryControl.Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("User", (string)null);
                 });
 
