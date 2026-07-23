@@ -6,5 +6,6 @@ namespace InventoryControl.Domain.Interfaces.Repositories
     {
         Task<User?> GetByUsernameAsync(string username);
         Task<User?> GetByEmailAsync(string email);
+        Task<IEnumerable<User>> GetAllUsersAsync();
     }
 }

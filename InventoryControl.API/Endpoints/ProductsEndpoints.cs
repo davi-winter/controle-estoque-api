@@ -19,7 +19,8 @@ namespace InventoryControl.API.Endpoints
                 return Results.Created($"/api/products/{response.Id}", response);
             })
             .WithName("CreateProduct")
-            .Produces<ProductResponse>(StatusCodes.Status201Created);
+            .Produces<ProductResponse>(StatusCodes.Status201Created)
+            .RequireAuthorization(p => p.RequireRole("manager"));
 
             // PUT /api/products/{id}
             group.MapPut("/{id}", async (Guid id, CreateProductRequest request, UpdateProductUseCase useCase) =>
@@ -29,7 +30,8 @@ namespace InventoryControl.API.Endpoints
                 return Results.Ok(response);
             })
             .WithName("UpdateProduct")
-            .Produces<ProductResponse>(StatusCodes.Status200OK);
+            .Produces<ProductResponse>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("manager"));
 
             // PATCH /api/products/update-stock
             group.MapPatch("/update-stock", async (UpdateStockRequest request, UpdateStockUseCase useCase) =>
@@ -37,7 +39,8 @@ namespace InventoryControl.API.Endpoints
                 var response = await useCase.ExecuteAsync(request);
 
                 return Results.Ok(response);
-            });
+            })
+            .RequireAuthorization(p => p.RequireRole("operator"));
 
             // DELETE /api/products/{id}
             group.MapDelete("/{id}", async (Guid id, DeleteProductUseCase useCase) =>
@@ -46,7 +49,8 @@ namespace InventoryControl.API.Endpoints
 
                 return Results.NoContent();
             })
-            .WithName("DeleteProduct");
+            .WithName("DeleteProduct")
+            .RequireAuthorization(p => p.RequireRole("admin"));
 
             //GET /api/products/{sku}
             group.MapGet("/{sku}", async ([FromQuery] string sku, GetBySkuUseCase useCase) =>
@@ -56,7 +60,10 @@ namespace InventoryControl.API.Endpoints
                 return response is null
                     ? Results.NotFound()
                     : Results.Ok(response);
-            });
+            })
+            .WithName("GetBySku")
+            .Produces<ProductResponse>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("operator"));
 
             // GET /api/products/low-stock
             group.MapGet("/low-stock", async ([FromQuery] int? limit, GetLowStockProductsUseCase useCase) =>
@@ -66,7 +73,8 @@ namespace InventoryControl.API.Endpoints
                 return Results.Ok(response);
             })
             .WithName("GetLowStockProducts")
-            .Produces<IEnumerable<ProductWithCurrentStockResponse>>(StatusCodes.Status200OK);
+            .Produces<IEnumerable<ProductWithCurrentStockResponse>>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("manager"));
 
             // GET /api/products/products-with-category
             group.MapGet("/products-with-category/{categoryId}", async ([FromQuery] Guid categoryId, GetProductsWithCategoryUseCase useCase) =>
@@ -76,7 +84,8 @@ namespace InventoryControl.API.Endpoints
                 return Results.Ok(response);
             })
             .WithName("GetProductsWithCategory")
-            .Produces<IEnumerable<ProductWithCategoryResponse>>(StatusCodes.Status200OK);
+            .Produces<IEnumerable<ProductWithCategoryResponse>>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("manager"));
         }
     }
 }

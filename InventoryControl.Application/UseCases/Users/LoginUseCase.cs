@@ -19,13 +19,18 @@ namespace InventoryControl.Application.UseCases.Users
 
         public async Task<Result<LoginResponse>?> ExecuteAsync(LoginRequest request)
         {
+            var userValidation = new UserValidation(_userRepository);
+
+            if (!userValidation.IsValidEmailFormat(request.Email))
+                return Result<LoginResponse>.Failure(new Error("User.InvalidEmail", "O email informado é inválido."));
+
             var user = await _userRepository.GetByEmailAsync(request.Email);
 
-            if (user == null)
-                return Result<LoginResponse>.Failure(new Error("User.NotFound", "Usuário não encontrado."));
+            //if (user == null)
+            //    return Result<LoginResponse>.Failure(new Error("User.NotFound", "Usuário não encontrado."));
 
-            // Validar as credenciais do usuário (pegar a senha e verificar o hash)
-            if (!PasswordHasher.Verify(user.PasswordHash, request.Password))
+            // Validar as credenciais do usuário (verificar se usuário foi encontrado, após pegar a senha e verificar o hash)
+            if (user == null || !PasswordHasher.Verify(user.PasswordHash, request.Password))
                 return Result<LoginResponse>.Failure(new Error("User.InvalidCredentials", "Credenciais inválidas."));
 
             var token = _tokenService.GenerateToken(user);

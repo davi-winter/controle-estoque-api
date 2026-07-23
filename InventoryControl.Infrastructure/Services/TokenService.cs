@@ -1,4 +1,5 @@
-﻿using InventoryControl.Domain.Entities;
+﻿using InventoryControl.Application;
+using InventoryControl.Domain.Entities;
 using InventoryControl.Domain.Interfaces.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -19,14 +20,10 @@ namespace InventoryControl.Infrastructure.Services
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.JwtKey);
+            var claims = user.GetClaims();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new (ClaimTypes.Name, "daviwinter"),
-                    new (ClaimTypes.Role, "admin"),
-                    new ("fruta", "banana")
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(8),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), 
