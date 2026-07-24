@@ -24,6 +24,9 @@ namespace InventoryControl.Application.UseCases.Users
             if (string.IsNullOrWhiteSpace(request.Username))
                 return Result<UserResponse>.Failure(new Error("User.UsernameRequired", "O nome de usuário é obrigatório."));
 
+            if (request.Username.Length < 3 || request.Username.Length > 50)
+                return Result<UserResponse>.Failure(new Error("User.InvalidUsernameLength", "O nome de usuário deve ter entre 3 e 50 caracteres."));
+
             if (!userValidation.IsUsernameUnique(request.Username))
                 return Result<UserResponse>.Failure(new Error("User.UsernameExists", "O nome de usuário informado já está em uso."));
 
@@ -33,6 +36,9 @@ namespace InventoryControl.Application.UseCases.Users
             if (!userValidation.IsValidEmailFormat(request.Email))
                 return Result<UserResponse>.Failure(new Error("User.InvalidEmail", "O email informado é inválido."));
 
+            if (request.Email.Length > 100)
+                return Result<UserResponse>.Failure(new Error("User.InvalidEmailLength", "O email deve ter no máximo 100 caracteres."));
+
             if (!userValidation.IsEmailUnique(request.Email))
                 return Result<UserResponse>.Failure(new Error("User.EmailExists", "O email informado já está em uso."));
 
@@ -41,6 +47,9 @@ namespace InventoryControl.Application.UseCases.Users
 
             if (!userValidation.IsPasswordValid(request.Password))
                 return Result<UserResponse>.Failure(new Error("User.InvalidPassword", "A senha informada é inválida. Deve conter pelo menos 8 caracteres, uma letra maiúscula, uma minúscula, um número e um caractere especial."));
+
+            if (request.Password.Length > 255)
+                return Result<UserResponse>.Failure(new Error("User.InvalidPasswordLength", "A senha deve ter no máximo 255 caracteres."));
 
             if (string.IsNullOrWhiteSpace(request.Role))
                 return Result<UserResponse>.Failure(new Error("User.RoleRequired", "A função é obrigatória."));

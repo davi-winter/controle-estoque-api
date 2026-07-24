@@ -28,5 +28,11 @@ namespace InventoryControl.Infrastructure.Repositories
                 .Where(p => p.CategoryId == categoryId)
                 .OrderBy(p => p.Name)
                 .ToListAsync();
+
+        public async Task<bool> CategoryExistsAsync(Guid categoryId)
+        {
+            var category = await _dbSet.FirstOrDefaultAsync(p => p.CategoryId == categoryId);
+            return category != null;
+        }
     }
 }

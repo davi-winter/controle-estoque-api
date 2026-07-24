@@ -16,7 +16,10 @@ namespace InventoryControl.API.Endpoints
             {
                 var response = await useCase.ExecuteAsync(request);
 
-                return Results.Created($"/api/products/{response.Id}", response);
+                if (response.IsFailure)
+                    return Results.BadRequest(response.Error);
+
+                return Results.Created($"/api/products/{response?.Value?.Id}", response?.Value);
             })
             .WithName("CreateProduct")
             .Produces<ProductResponse>(StatusCodes.Status201Created)

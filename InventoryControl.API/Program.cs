@@ -1,6 +1,3 @@
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using InventoryControl.API.Endpoints;
 using InventoryControl.Application;
 using InventoryControl.Domain.Interfaces.Repositories;
@@ -8,8 +5,12 @@ using InventoryControl.Domain.Interfaces.Services;
 using InventoryControl.Infrastructure.Context;
 using InventoryControl.Infrastructure.Repositories;
 using InventoryControl.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,5 +87,27 @@ app.UseHttpsRedirection();
 app.MapUsersEndpoints();
 app.MapCategoriesEndpoints();
 app.MapProductsEndpoints();
+
+app.UseExceptionHandler(exceptionHandlerApp =>
+{
+    exceptionHandlerApp.Run(async context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        context.Response.ContentType = "application/json";
+
+        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+        var exception = exceptionHandlerPathFeature?.Error;
+
+        var response = new
+        {
+            code = 400,
+            message = "Ocorreu um erro ao processar sua solicitação.",
+            exception = exception?.GetType().Name,
+            messageException = exception?.Message
+        };
+
+        await context.Response.WriteAsJsonAsync(response);
+    });
+});
 
 app.Run();
