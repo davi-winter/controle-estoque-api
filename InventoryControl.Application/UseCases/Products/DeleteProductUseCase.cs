@@ -1,4 +1,5 @@
 ﻿using InventoryControl.Application.DTOs.Products;
+using InventoryControl.Application.Validations;
 using InventoryControl.Domain.Interfaces.Repositories;
 
 namespace InventoryControl.Application.UseCases.Products
@@ -14,17 +15,17 @@ namespace InventoryControl.Application.UseCases.Products
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> ExecuteAsync(Guid productId)
+        public async Task<Result<bool>> ExecuteAsync(Guid productId)
         {
             var product = await _repository.GetByIdAsync(productId);
 
             if (product == null)
-                throw new ArgumentException("Produto não encontrado.", nameof(productId));
+                return Result<bool>.Failure(new Error("Product.NotFound", "Produto não encontrado."));
 
             _repository.Delete(product);
             await _unitOfWork.CommitAsync();
 
-            return true;
+            return Result<bool>.Success(true);
         }
     }
 }

@@ -43,9 +43,6 @@ namespace InventoryControl.Application.UseCases.Products
             if (request.Description.Length > 500)
                 return Result<ProductResponse>.Failure(new Error("Product.InvalidDescriptionLength", "A descrição do produto deve ter no máximo 500 caracteres."));
 
-            //if (!productValidation.IsValidPriceFormat(request.Price))
-            //    return Result<ProductResponse>.Failure(new Error("Product.InvalidPriceFormat", "O preço do produto está em um formato inválido."));
-
             if (request.Price <= 0)
                 return Result<ProductResponse>.Failure(new Error("Product.InvalidPrice", "O preço do produto deve ser um valor positivo."));
 

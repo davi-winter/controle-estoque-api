@@ -13,7 +13,7 @@ namespace InventoryControl.Application.UseCases.Users
 
         public async Task<Result<UserResponse>> ExecuteAsync(string username)
         {
-            var user = await _repository.GetByUsernameAsync(username);
+            var user = await _repository.GetByUsernameAsync(Guid.Empty, username);
 
             if (user == null)
                 return Result<UserResponse>.Failure(new Error("User.NotFound", "Usuário não encontrado."));

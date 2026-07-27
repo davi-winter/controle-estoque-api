@@ -10,9 +10,9 @@ namespace InventoryControl.Application.Validations
         public UserValidation(IUserRepository repository)
             => _repository = repository;
 
-        public bool IsUsernameUnique(string username)
+        public bool IsUsernameUnique(Guid id, string username)
         {
-            var user = _repository.GetByUsernameAsync(username).Result;
+            var user = _repository.GetByUsernameAsync(id, username).Result;
             return user == null;
         }
 

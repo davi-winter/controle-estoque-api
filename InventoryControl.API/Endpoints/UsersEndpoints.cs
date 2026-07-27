@@ -1,6 +1,4 @@
-﻿using InventoryControl.Application.DTOs.Products;
-using InventoryControl.Application.DTOs.Users;
-using InventoryControl.Application.UseCases.Products;
+﻿using InventoryControl.Application.DTOs.Users;
 using InventoryControl.Application.UseCases.Users;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -42,10 +40,10 @@ namespace InventoryControl.API.Endpoints
             {
                 var response = await useCase.ExecuteAsync(request);
 
-                if (response?.IsFailure == true)
+                if (response.IsFailure)
                     return Results.BadRequest(response.Error);
 
-                return Results.Created($"/api/users/{response?.Value?.Id}", response?.Value);
+                return Results.Created($"/api/users/{response.Value?.Id}", response.Value);
             })
             .WithName("CreateUser")
             .Produces<UserResponse>(StatusCodes.Status201Created)
@@ -56,10 +54,10 @@ namespace InventoryControl.API.Endpoints
             {
                 var response = await useCase.ExecuteAsync(id, request);
 
-                if (response?.IsFailure == true)
+                if (response.IsFailure)
                     return Results.BadRequest(response.Error);
 
-                return Results.Ok(response?.Value);
+                return Results.Ok(response.Value);
             })
             .WithName("UpdateUser")
             .Produces<UserResponse>(StatusCodes.Status200OK)
@@ -70,7 +68,7 @@ namespace InventoryControl.API.Endpoints
             {
                 var response = await useCase.ExecuteAsync(id);
 
-                if (response?.IsFailure == true)
+                if (response.IsFailure)
                     return Results.BadRequest(response.Error);
 
                 return Results.NoContent();
@@ -83,10 +81,10 @@ namespace InventoryControl.API.Endpoints
             {
                 var response = await useCase.ExecuteAsync(username);
 
-                if (response?.IsFailure == true)
+                if (response.IsFailure)
                     return Results.NotFound(response.Error);
 
-                return Results.Ok(response?.Value);
+                return Results.Ok(response.Value);
             })
             .WithName("GetByUsername")
             .Produces<UserResponse>(StatusCodes.Status200OK)
@@ -97,10 +95,10 @@ namespace InventoryControl.API.Endpoints
             {
                 var response = await useCase.ExecuteAsync(email);
 
-                if (response?.IsFailure == true)
+                if (response.IsFailure)
                     return Results.NotFound(response.Error);
 
-                return Results.Ok(response?.Value);
+                return Results.Ok(response.Value);
             })
             .WithName("GetByEmail")
             .Produces<UserResponse>(StatusCodes.Status200OK)
@@ -111,10 +109,10 @@ namespace InventoryControl.API.Endpoints
             {
                 var response = await useCase.ExecuteAsync();
 
-                if (response?.IsFailure == true)
+                if (response.IsFailure)
                     return Results.NotFound(response.Error);
 
-                return Results.Ok(response?.Value);
+                return Results.Ok(response.Value);
             })
             .WithName("GetAllUsers")
             .Produces<IEnumerable<UserResponse>>(StatusCodes.Status200OK)

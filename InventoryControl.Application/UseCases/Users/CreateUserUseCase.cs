@@ -27,7 +27,7 @@ namespace InventoryControl.Application.UseCases.Users
             if (request.Username.Length < 3 || request.Username.Length > 50)
                 return Result<UserResponse>.Failure(new Error("User.InvalidUsernameLength", "O nome de usuário deve ter entre 3 e 50 caracteres."));
 
-            if (!userValidation.IsUsernameUnique(request.Username))
+            if (!userValidation.IsUsernameUnique(Guid.Empty, request.Username))
                 return Result<UserResponse>.Failure(new Error("User.UsernameExists", "O nome de usuário informado já está em uso."));
 
             if (string.IsNullOrWhiteSpace(request.Email))

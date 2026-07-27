@@ -3,6 +3,6 @@
     public record CreateCategoryRequest(
         string Name,
         string Description,
-        bool IsActive
+        bool IsActive = true
     );
 }

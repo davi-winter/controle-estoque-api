@@ -22,12 +22,6 @@ namespace InventoryControl.Application.Validations
             return Regex.IsMatch(sku, pattern, RegexOptions.IgnoreCase);
         }
 
-        //public bool IsValidPriceFormat(decimal price)
-        //{
-        //    var pattern = @"^\d+([,\.]\d{2})?$";
-        //    return Regex.IsMatch(price.ToString("F2"), pattern, RegexOptions.IgnoreCase);
-        //}
-
         public bool CategoryExists(Guid categoryId)
             => _repository.CategoryExistsAsync(categoryId).Result;
     }

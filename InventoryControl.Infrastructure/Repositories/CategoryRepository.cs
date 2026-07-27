@@ -11,7 +11,7 @@ namespace InventoryControl.Infrastructure.Repositories
         {
         }
 
-        public async Task<bool> ExistsByNameAsync(string name)
-            => await _dbSet.AnyAsync(c => c.Name.ToLower() == name.ToLower());
+        public async Task<bool> ExistsByNameAsync(Guid id, string name)
+            => await _dbSet.AnyAsync(c => c.Id != id && c.Name.ToLower() == name.ToLower());
     }
 }

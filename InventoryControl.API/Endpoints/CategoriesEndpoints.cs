@@ -15,10 +15,28 @@ namespace InventoryControl.API.Endpoints
             {
                 var response = await useCase.ExecuteAsync(request);
 
-                return Results.Created($"/api/categories/{response.Id}", response);
+                if (response.IsFailure)
+                    return Results.BadRequest(response.Error);
+
+                return Results.Created($"/api/categories/{response.Value?.Id}", response.Value);
             })
             .WithName("CreateCategory")
-            .Produces<CategoryResponse>(StatusCodes.Status201Created);
+            .Produces<CategoryResponse>(StatusCodes.Status201Created)
+            .RequireAuthorization(p => p.RequireRole("manager"));
+
+            // PUT /api/categories/{id}
+            group.MapPut("/{id}", async (Guid id, CreateCategoryRequest request, UpdateCategoryUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(id, request);
+
+                if (response.IsFailure)
+                    return Results.BadRequest(response.Error);
+
+                return Results.Ok(response.Value);
+            })
+            .WithName("UpdateCategory")
+            .Produces<CategoryResponse>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("manager"));
         }
     }
 }

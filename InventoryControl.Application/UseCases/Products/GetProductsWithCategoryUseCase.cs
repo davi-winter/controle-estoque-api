@@ -1,4 +1,5 @@
 ﻿using InventoryControl.Application.DTOs.Products;
+using InventoryControl.Application.Validations;
 using InventoryControl.Domain.Interfaces.Repositories;
 
 namespace InventoryControl.Application.UseCases.Products
@@ -10,11 +11,16 @@ namespace InventoryControl.Application.UseCases.Products
         public GetProductsWithCategoryUseCase(IProductRepository repository)
             => _repository = repository;
 
-        public async Task<IEnumerable<ProductWithCategoryResponse>> ExecuteAsync(Guid categoryId)
+        public async Task<Result<IEnumerable<ProductWithCategoryResponse>>> ExecuteAsync(Guid categoryId)
         {
+            var productValidation = new ProductValidation(_repository);
+
             var products = await _repository.GetProductsWithCategoryAsync(categoryId);
 
-            return products
+            if (!productValidation.CategoryExists(categoryId))
+                return Result<IEnumerable<ProductWithCategoryResponse>>.Failure(new Error("Category.NotFound", "Categoria não encontrada."));   
+
+            return Result<IEnumerable<ProductWithCategoryResponse>>.Success(products
                 .Select(p =>
                     new ProductWithCategoryResponse(
                         p.Id,
@@ -23,7 +29,7 @@ namespace InventoryControl.Application.UseCases.Products
                         p.Description,
                         p.Price,
                         p.Category!.Name)
-                ).ToList();
+                ).ToList());
         }
     }
 }

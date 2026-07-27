@@ -29,6 +29,9 @@ namespace InventoryControl.Application.UseCases.Users
             if (string.IsNullOrWhiteSpace(request.Username))
                 return Result<UserResponse>.Failure(new Error("User.UsernameRequired", "O nome de usuário é obrigatório."));
 
+            if (!userValidation.IsUsernameUnique(userId, request.Username))
+                return Result<UserResponse>.Failure(new Error("User.UsernameExists", "O nome de usuário informado já está em uso."));
+
             if (string.IsNullOrWhiteSpace(request.Email))
                 return Result<UserResponse>.Failure(new Error("User.EmailRequired", "O email é obrigatório."));
 

@@ -1,4 +1,5 @@
-﻿using InventoryControl.Application.DTOs.Products;
+﻿using Azure;
+using InventoryControl.Application.DTOs.Products;
 using InventoryControl.Application.UseCases.Products;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,7 +31,10 @@ namespace InventoryControl.API.Endpoints
             {
                 var response = await useCase.ExecuteAsync(id, request);
 
-                return Results.Ok(response);
+                if (response.IsFailure)
+                    return Results.BadRequest(response.Error);
+
+                return Results.Ok(response.Value);
             })
             .WithName("UpdateProduct")
             .Produces<ProductResponse>(StatusCodes.Status200OK)
@@ -48,7 +52,10 @@ namespace InventoryControl.API.Endpoints
             // DELETE /api/products/{id}
             group.MapDelete("/{id}", async (Guid id, DeleteProductUseCase useCase) =>
             {
-                await useCase.ExecuteAsync(id);
+                var response = await useCase.ExecuteAsync(id);
+
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
 
                 return Results.NoContent();
             })
@@ -60,9 +67,10 @@ namespace InventoryControl.API.Endpoints
             {
                 var response = await useCase.ExecuteAsync(sku);
 
-                return response is null
-                    ? Results.NotFound()
-                    : Results.Ok(response);
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
+
+                return Results.Ok(response.Value);
             })
             .WithName("GetBySku")
             .Produces<ProductResponse>(StatusCodes.Status200OK)
@@ -84,7 +92,10 @@ namespace InventoryControl.API.Endpoints
             {
                 var response = await useCase.ExecuteAsync(categoryId);
 
-                return Results.Ok(response);
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
+
+                return Results.Ok(response.Value);
             })
             .WithName("GetProductsWithCategory")
             .Produces<IEnumerable<ProductWithCategoryResponse>>(StatusCodes.Status200OK)

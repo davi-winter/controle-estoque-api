@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,15 +99,21 @@ app.UseExceptionHandler(exceptionHandlerApp =>
         var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
         var exception = exceptionHandlerPathFeature?.Error;
 
-        var response = new
+        if (exception is BadHttpRequestException { InnerException: JsonException jsonEx })
         {
-            code = 400,
-            message = "Ocorreu um erro ao processar sua solicitação.",
-            exception = exception?.GetType().Name,
-            messageException = exception?.Message
-        };
+            var response = new
+            {
+                code = 400,
+                message = "Erro de conversão no formato do JSON.",
+                messageException = jsonEx.Message
+            };
 
-        await context.Response.WriteAsJsonAsync(response);
+            await context.Response.WriteAsJsonAsync(response);
+        }
+        else
+        {
+            await context.Response.WriteAsJsonAsync(new { status = 500, error = "Erro interno no servidor." });
+        }
     });
 });
 
