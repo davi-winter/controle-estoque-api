@@ -1,5 +1,4 @@
-﻿using Azure;
-using InventoryControl.Application.DTOs.Products;
+﻿using InventoryControl.Application.DTOs.Products;
 using InventoryControl.Application.UseCases.Products;
 using Microsoft.AspNetCore.Mvc;
 

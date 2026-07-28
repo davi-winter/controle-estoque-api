@@ -37,6 +37,47 @@ namespace InventoryControl.API.Endpoints
             .WithName("UpdateCategory")
             .Produces<CategoryResponse>(StatusCodes.Status200OK)
             .RequireAuthorization(p => p.RequireRole("manager"));
+
+            // DELETE /api/categories/{id}
+            group.MapDelete("/{id}", async (Guid id, DeleteCategoryUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(id);
+
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
+
+                return Results.NoContent();
+            })
+            .WithName("DeleteCategory")
+            .RequireAuthorization(p => p.RequireRole("admin"));
+
+            //GET /api/categories/{id}
+            group.MapGet("/{id}", async (Guid id, GetByCategoryIdUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(id);
+
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
+
+                return Results.Ok(response.Value);
+            })
+            .WithName("GetByCategoryId")
+            .Produces<CategoryResponse>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("operator"));
+
+            // GET /api/categories
+            group.MapGet("/", async (GetAllCategoriesUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync();
+
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
+
+                return Results.Ok(response.Value);
+            })
+            .WithName("GetAllCategories")
+            .Produces<IEnumerable<CategoryResponse>>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("operator"));
         }
     }
 }

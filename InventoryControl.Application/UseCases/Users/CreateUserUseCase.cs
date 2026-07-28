@@ -39,7 +39,7 @@ namespace InventoryControl.Application.UseCases.Users
             if (request.Email.Length > 100)
                 return Result<UserResponse>.Failure(new Error("User.InvalidEmailLength", "O email deve ter no máximo 100 caracteres."));
 
-            if (!userValidation.IsEmailUnique(request.Email))
+            if (!userValidation.IsEmailUnique(Guid.Empty, request.Email))
                 return Result<UserResponse>.Failure(new Error("User.EmailExists", "O email informado já está em uso."));
 
             if (string.IsNullOrWhiteSpace(request.Password))

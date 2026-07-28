@@ -11,8 +11,8 @@ namespace InventoryControl.Infrastructure.Repositories
         {
         }
 
-        public async Task<Product?> GetBySkuAsync(string sku)
-            => await _dbSet.FirstOrDefaultAsync(p => p.Sku == sku);
+        public async Task<Product?> GetBySkuAsync(Guid id, string sku)
+            => await _dbSet.FirstOrDefaultAsync(p => p.Id != id && p.Sku == sku);
 
         public async Task<IEnumerable<Product>> GetLowStockProductsAsync(int limit)
             => await _dbSet

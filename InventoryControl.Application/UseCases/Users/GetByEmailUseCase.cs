@@ -18,7 +18,7 @@ namespace InventoryControl.Application.UseCases.Users
             if (!userValidation.IsValidEmailFormat(email))
                 return Result<UserResponse>.Failure(new Error("User.InvalidEmail", "O email informado é inválido."));
 
-            var user = await _repository.GetByEmailAsync(email);
+            var user = await _repository.GetByEmailAsync(Guid.Empty, email);
 
             if (user == null)
                 return Result<UserResponse>.Failure(new Error("User.NotFound", "Usuário não encontrado."));

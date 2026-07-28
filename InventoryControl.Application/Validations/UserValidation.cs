@@ -16,9 +16,9 @@ namespace InventoryControl.Application.Validations
             return user == null;
         }
 
-        public bool IsEmailUnique(string email)
+        public bool IsEmailUnique(Guid id, string email)
         {
-            var user = _repository.GetByEmailAsync(email).Result;
+            var user = _repository.GetByEmailAsync(id, email).Result;
             return user == null;
         }
 

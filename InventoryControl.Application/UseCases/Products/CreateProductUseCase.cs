@@ -2,25 +2,29 @@
 using InventoryControl.Application.Validations;
 using InventoryControl.Domain.Entities;
 using InventoryControl.Domain.Interfaces.Repositories;
-using System.Net;
-using System.Text.Json;
+using InventoryControl.Domain.Interfaces.Services;
 
 namespace InventoryControl.Application.UseCases.Products
 {
     public class CreateProductUseCase
     {
-        private readonly IProductRepository _repository;
+        private readonly IProductRepository _productRepository;
+        private readonly IStockMovementRepository _stockMovementRepository;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateProductUseCase(IProductRepository repository, IUnitOfWork unitOfWork)
+        public CreateProductUseCase(IProductRepository productRepository, IStockMovementRepository stockMovementRepository, 
+            ICurrentUserService currentUserService, IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _productRepository = productRepository;
+            _stockMovementRepository = stockMovementRepository;
+            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<Result<ProductResponse>> ExecuteAsync(CreateProductRequest request)
         {
-            var productValidation = new ProductValidation(_repository);
+            var productValidation = new ProductValidation(_productRepository);
 
             if (string.IsNullOrWhiteSpace(request.Name))
                 return Result<ProductResponse>.Failure(new Error("Product.NameRequired", "O nome do produto é obrigatório."));
@@ -37,7 +41,7 @@ namespace InventoryControl.Application.UseCases.Products
             if (!productValidation.IsValidSkuFormat(request.Sku))
                 return Result<ProductResponse>.Failure(new Error("Product.InvalidSkuFormat", "O SKU do produto está em um formato inválido. Deve conter apenas letras, números e hífens."));
 
-            if (!productValidation.IsSkuUnique(request.Sku))
+            if (!productValidation.IsSkuUnique(Guid.Empty, request.Sku))
                 return Result<ProductResponse>.Failure(new Error("Product.SkuAlreadyExists", "O SKU do produto já existe."));
 
             if (request.Description.Length > 500)
@@ -62,8 +66,19 @@ namespace InventoryControl.Application.UseCases.Products
                 CurrentStock = request.CurrentStock,
                 CategoryId = request.CategoryId
             };
+            await _productRepository.AddAsync(product);
 
-            await _repository.AddAsync(product);
+            var stockMovement = new StockMovement
+            {
+                Id = Guid.NewGuid(),
+                ProductId = product.Id,
+                Quantity = request.CurrentStock,
+                Type = MovementType.Input,
+                Observation = "Estoque inicial do produto.",
+                UserId = _currentUserService.UserId  // Pega o usuário autenticado no contexto da aplicação
+            };
+            await _stockMovementRepository.AddAsync(stockMovement);
+
             await _unitOfWork.CommitAsync();
 
             return Result<ProductResponse>.Success(new ProductResponse(

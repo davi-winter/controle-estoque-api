@@ -39,6 +39,9 @@ namespace InventoryControl.Application.UseCases.Products
             if (!productValidation.IsValidSkuFormat(request.Sku))
                 return Result<ProductResponse>.Failure(new Error("Product.InvalidSkuFormat", "O SKU do produto está em um formato inválido. Deve conter apenas letras, números e hífens."));
 
+            if (!productValidation.IsSkuUnique(productId, request.Sku))
+                return Result<ProductResponse>.Failure(new Error("Product.SkuAlreadyExists", "O SKU do produto já existe."));
+
             if (request.Description.Length > 500)
                 return Result<ProductResponse>.Failure(new Error("Product.InvalidDescriptionLength", "A descrição do produto deve ter no máximo 500 caracteres."));
 

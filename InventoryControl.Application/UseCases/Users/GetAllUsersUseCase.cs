@@ -13,7 +13,7 @@ namespace InventoryControl.Application.UseCases.Users
 
         public async Task<Result<IEnumerable<UserResponse>>> ExecuteAsync()
         {
-            var users = await _repository.GetAllUsersAsync();
+            var users = await _repository.GetAllAsync("username");
 
             if (!users.Any())
                 return Result<IEnumerable<UserResponse>>.Failure(new Error("User.NotFound", "Não há usuários cadastrados."));

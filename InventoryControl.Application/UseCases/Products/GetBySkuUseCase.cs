@@ -13,7 +13,7 @@ namespace InventoryControl.Application.UseCases.Products
 
         public async Task<Result<ProductResponse?>> ExecuteAsync(string sku)
         {
-            var product = await _repository.GetBySkuAsync(sku);
+            var product = await _repository.GetBySkuAsync(Guid.Empty, sku);
 
             if (product == null)
                 return Result<ProductResponse?>.Failure(new Error("Product.NotFound", "Produto não encontrado."));

@@ -10,9 +10,9 @@ namespace InventoryControl.Application.Validations
         public ProductValidation(IProductRepository repository)
             => _repository = repository;
 
-        public bool IsSkuUnique(string sku)
+        public bool IsSkuUnique(Guid id, string sku)
         {
-            var product = _repository.GetBySkuAsync(sku).Result;
+            var product = _repository.GetBySkuAsync(id, sku).Result;
             return product == null;
         }
 

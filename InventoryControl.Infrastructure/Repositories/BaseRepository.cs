@@ -1,6 +1,7 @@
 ﻿using InventoryControl.Domain.Interfaces.Repositories;
 using InventoryControl.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace InventoryControl.Infrastructure.Repositories
 {
@@ -15,8 +16,24 @@ namespace InventoryControl.Infrastructure.Repositories
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
-            => await _dbSet.AsNoTracking().ToListAsync();
+        //public async Task<IEnumerable<T>> GetAllAsync()
+        //    => await _dbSet.AsNoTracking().ToListAsync();
+
+        public async Task<IEnumerable<T>> GetAllAsync(string? sortBy = null, bool ascending = true)
+        {
+            IQueryable<T> query = _dbSet.AsNoTracking();
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                if (!string.IsNullOrEmpty(sortBy))
+                {
+                    var direction = ascending ? "ascending" : "descending";
+                    query = query.OrderBy($"{sortBy} {direction}");
+                }
+            }
+
+            return await query.ToListAsync();
+        }
 
         public async Task<T?> GetByIdAsync(Guid id)
             => await _dbSet.FindAsync(id);

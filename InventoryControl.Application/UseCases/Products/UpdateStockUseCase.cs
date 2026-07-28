@@ -1,6 +1,7 @@
 ﻿using InventoryControl.Application.DTOs.Products;
 using InventoryControl.Domain.Entities;
 using InventoryControl.Domain.Interfaces.Repositories;
+using InventoryControl.Domain.Interfaces.Services;
 
 namespace InventoryControl.Application.UseCases.Products
 {
@@ -8,12 +9,15 @@ namespace InventoryControl.Application.UseCases.Products
     {
         private readonly IProductRepository _productRepository;
         private readonly IStockMovementRepository _stockMovementRepository;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateStockUseCase(IProductRepository productRepository, IStockMovementRepository stockMovementRepository, IUnitOfWork unitOfWork)
+        public UpdateStockUseCase(IProductRepository productRepository, IStockMovementRepository stockMovementRepository, 
+            ICurrentUserService currentUserService, IUnitOfWork unitOfWork)
         {
             _productRepository = productRepository;
             _stockMovementRepository = stockMovementRepository;
+            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
 
@@ -46,7 +50,7 @@ namespace InventoryControl.Application.UseCases.Products
                 Quantity = request.Quantity,
                 Type = movementType,
                 Observation = request.Observation,
-                UserId = Guid.Parse("4a29ec04-3203-44e2-a927-d23f421a0959") // Pegar o usuário logado no contexto da aplicação
+                UserId = _currentUserService.UserId  // Pegar o usuário autenticado no contexto da aplicação
             };
             await _stockMovementRepository.AddAsync(stockMovement);
 

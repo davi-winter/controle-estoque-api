@@ -38,6 +38,9 @@ namespace InventoryControl.Application.UseCases.Users
             if (!userValidation.IsValidEmailFormat(request.Email))
                 return Result<UserResponse>.Failure(new Error("User.InvalidEmail", "O email informado é inválido."));
 
+            if (!userValidation.IsEmailUnique(userId, request.Email))
+                return Result<UserResponse>.Failure(new Error("User.EmailExists", "O email informado já está em uso."));
+
             if (string.IsNullOrWhiteSpace(request.Password))
                 return Result<UserResponse>.Failure(new Error("User.PasswordRequired", "A senha é obrigatória."));
 
