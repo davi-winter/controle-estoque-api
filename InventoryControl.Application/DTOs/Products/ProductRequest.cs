@@ -5,14 +5,15 @@
         string Sku,
         string Description,
         decimal Price,
-        int CurrentStock,
+        int InitialStock,
         Guid CategoryId
     );
 
-    public record UpdateStockRequest(
-        Guid ProductId,
-        int Quantity,
-        bool IsAddition,
-        string Observation
+    public record UpdateProductRequest(
+    string Name,
+    string Sku,
+    string Description,
+    decimal Price,
+    Guid CategoryId
     );
 }

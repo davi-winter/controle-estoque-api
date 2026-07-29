@@ -91,6 +91,7 @@ app.UseHttpsRedirection();
 app.MapUsersEndpoints();
 app.MapCategoriesEndpoints();
 app.MapProductsEndpoints();
+app.MapStockMovementsEndpoints();
 
 app.UseExceptionHandler(exceptionHandlerApp =>
 {

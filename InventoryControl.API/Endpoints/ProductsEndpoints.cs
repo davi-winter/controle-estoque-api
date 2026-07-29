@@ -1,5 +1,6 @@
 ﻿using InventoryControl.Application.DTOs.Products;
 using InventoryControl.Application.UseCases.Products;
+using InventoryControl.Application.UseCases.StockMovements;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryControl.API.Endpoints
@@ -26,7 +27,7 @@ namespace InventoryControl.API.Endpoints
             .RequireAuthorization(p => p.RequireRole("manager"));
 
             // PUT /api/products/{id}
-            group.MapPut("/{id}", async (Guid id, CreateProductRequest request, UpdateProductUseCase useCase) =>
+            group.MapPut("/{id}", async (Guid id, UpdateProductRequest request, UpdateProductUseCase useCase) =>
             {
                 var response = await useCase.ExecuteAsync(id, request);
 
@@ -38,15 +39,6 @@ namespace InventoryControl.API.Endpoints
             .WithName("UpdateProduct")
             .Produces<ProductResponse>(StatusCodes.Status200OK)
             .RequireAuthorization(p => p.RequireRole("manager"));
-
-            // PATCH /api/products/update-stock
-            group.MapPatch("/update-stock", async (UpdateStockRequest request, UpdateStockUseCase useCase) =>
-            {
-                var response = await useCase.ExecuteAsync(request);
-
-                return Results.Ok(response);
-            })
-            .RequireAuthorization(p => p.RequireRole("operator"));
 
             // DELETE /api/products/{id}
             group.MapDelete("/{id}", async (Guid id, DeleteProductUseCase useCase) =>

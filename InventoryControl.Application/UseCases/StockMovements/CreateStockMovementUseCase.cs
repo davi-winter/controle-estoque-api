@@ -1,34 +1,42 @@
 ﻿using InventoryControl.Application.DTOs.Products;
+using InventoryControl.Application.DTOs.StockMovements;
+using InventoryControl.Application.Validations;
 using InventoryControl.Domain.Entities;
 using InventoryControl.Domain.Interfaces.Repositories;
 using InventoryControl.Domain.Interfaces.Services;
 
-namespace InventoryControl.Application.UseCases.Products
+namespace InventoryControl.Application.UseCases.StockMovements
 {
-    public class UpdateStockUseCase
+    public class CreateStockMovementUseCase
     {
-        private readonly IProductRepository _productRepository;
         private readonly IStockMovementRepository _stockMovementRepository;
+        private readonly IProductRepository _productRepository;
         private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateStockUseCase(IProductRepository productRepository, IStockMovementRepository stockMovementRepository, 
+        public CreateStockMovementUseCase(IStockMovementRepository stockMovementRepository, IProductRepository productRepository, 
             ICurrentUserService currentUserService, IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
             _stockMovementRepository = stockMovementRepository;
+            _productRepository = productRepository;
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ProductWithCurrentStockResponse> ExecuteAsync(UpdateStockRequest request)
+        public async Task<Result<ProductWithCurrentStockResponse>> ExecuteAsync(StockMovementRequest request)
         {
-            var product = await _productRepository.GetByIdAsync(request.ProductId);
             MovementType movementType;
+            var product = await _productRepository.GetByIdAsync(request.ProductId);
 
             if (product == null)
-                throw new ArgumentException("Produto não encontrado.", nameof(request.ProductId));
-                
+                return Result<ProductWithCurrentStockResponse>.Failure(new Error("Product.NotFound", "Produto não encontrado."));
+
+            if (request.Quantity <= 0)
+                return Result<ProductWithCurrentStockResponse>.Failure(new Error("Product.InvalidQuantity", "Quantidade inválida para o movimento de estoque."));
+
+            if (!request.IsAddition && product.CurrentStock < request.Quantity)
+                return Result<ProductWithCurrentStockResponse>.Failure(new Error("Product.InsufficientStock", "Estoque insuficiente para a saída do produto."));
+
             if (request.IsAddition)
             {
                 product.AddToStock(request.Quantity);
@@ -56,14 +64,14 @@ namespace InventoryControl.Application.UseCases.Products
 
             await _unitOfWork.CommitAsync();
 
-            return new ProductWithCurrentStockResponse(
+            return Result<ProductWithCurrentStockResponse>.Success(new ProductWithCurrentStockResponse(
                 product.Id,
                 product.Name,
                 product.Sku,
                 product.Description,
                 product.Price,
                 product.CurrentStock
-            );
+            ));
         }
     }
 }

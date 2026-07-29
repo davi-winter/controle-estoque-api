@@ -50,8 +50,8 @@ namespace InventoryControl.Application.UseCases.Products
             if (request.Price <= 0)
                 return Result<ProductResponse>.Failure(new Error("Product.InvalidPrice", "O preço do produto deve ser um valor positivo."));
 
-            if (request.CurrentStock < 0)
-                return Result<ProductResponse>.Failure(new Error("Product.InvalidCurrentStock", "O estoque atual do produto deve ser um valor não negativo."));
+            if (request.InitialStock < 0)
+                return Result<ProductResponse>.Failure(new Error("Product.InvalidInitialStock", "O estoque inicial do produto deve ser um valor não negativo."));
 
             if (!productValidation.CategoryExists(request.CategoryId))
                 return Result<ProductResponse>.Failure(new Error("Product.InvalidCategoryId", "A categoria do produto é inválida."));
@@ -63,16 +63,17 @@ namespace InventoryControl.Application.UseCases.Products
                 Sku = request.Sku.ToUpper(),
                 Description = request.Description,
                 Price = request.Price,
-                CurrentStock = request.CurrentStock,
+                CurrentStock = request.InitialStock,
                 CategoryId = request.CategoryId
             };
             await _productRepository.AddAsync(product);
 
+            // Faz o registro do movimento de estoque inicial do produto
             var stockMovement = new StockMovement
             {
                 Id = Guid.NewGuid(),
                 ProductId = product.Id,
-                Quantity = request.CurrentStock,
+                Quantity = request.InitialStock,
                 Type = MovementType.Input,
                 Observation = "Estoque inicial do produto.",
                 UserId = _currentUserService.UserId  // Pega o usuário autenticado no contexto da aplicação

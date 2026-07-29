@@ -8,12 +8,12 @@
         decimal Price);
 
     public record ProductWithCurrentStockResponse(
-        Guid Id,
-        string Name,
-        string Sku,
-        string Description,
-        decimal Price,
-        int CurrentStock);
+    Guid Id,
+    string Name,
+    string Sku,
+    string Description,
+    decimal Price,
+    int CurrentStock);
 
     public record ProductWithCategoryResponse(
         Guid Id,

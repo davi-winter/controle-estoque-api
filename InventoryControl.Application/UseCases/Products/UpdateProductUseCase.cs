@@ -15,7 +15,7 @@ namespace InventoryControl.Application.UseCases.Products
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<ProductResponse>> ExecuteAsync(Guid productId, CreateProductRequest request)
+        public async Task<Result<ProductResponse>> ExecuteAsync(Guid productId, UpdateProductRequest request)
         {
             var productValidation = new ProductValidation(_repository);
 
@@ -48,9 +48,6 @@ namespace InventoryControl.Application.UseCases.Products
             if (request.Price <= 0)
                 return Result<ProductResponse>.Failure(new Error("Product.InvalidPrice", "O preço do produto deve ser um valor positivo."));
 
-            if (request.CurrentStock < 0)
-                return Result<ProductResponse>.Failure(new Error("Product.InvalidCurrentStock", "O estoque atual do produto deve ser um valor não negativo."));
-
             if (!productValidation.CategoryExists(request.CategoryId))
                 return Result<ProductResponse>.Failure(new Error("Product.InvalidCategoryId", "A categoria do produto é inválida."));
 
@@ -58,7 +55,6 @@ namespace InventoryControl.Application.UseCases.Products
             product.Sku = request.Sku;
             product.Description = request.Description;
             product.Price = request.Price;
-            product.CurrentStock = request.CurrentStock;
             product.CategoryId = request.CategoryId;
 
             _repository.Update(product);

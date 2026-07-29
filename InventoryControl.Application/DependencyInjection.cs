@@ -1,5 +1,6 @@
 ﻿using InventoryControl.Application.UseCases.Categories;
 using InventoryControl.Application.UseCases.Products;
+using InventoryControl.Application.UseCases.StockMovements;
 using InventoryControl.Application.UseCases.Users;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +19,7 @@ namespace InventoryControl.Application
             services.AddScoped<GetAllUsersUseCase>();
             services.AddScoped<CreateProductUseCase>();
             services.AddScoped<UpdateProductUseCase>();
-            services.AddScoped<UpdateStockUseCase>();
+            services.AddScoped<CreateStockMovementUseCase>();
             services.AddScoped<DeleteProductUseCase>();
             services.AddScoped<GetBySkuUseCase>();
             services.AddScoped<GetLowStockProductsUseCase>();
