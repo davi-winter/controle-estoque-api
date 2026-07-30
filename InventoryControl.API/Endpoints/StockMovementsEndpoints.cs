@@ -1,6 +1,9 @@
 ﻿using InventoryControl.Application.DTOs.Products;
 using InventoryControl.Application.DTOs.StockMovements;
 using InventoryControl.Application.UseCases.StockMovements;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace InventoryControl.API.Endpoints
 {
@@ -29,6 +32,72 @@ namespace InventoryControl.API.Endpoints
             .WithName("CreateStockMovement")
             .Produces<ProductResponse>(StatusCodes.Status200OK)
             .RequireAuthorization(p => p.RequireRole("operator"));
+
+            // GET /api/stock-movements
+            group.MapGet("/", async (GetAllStockMovementsUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync();
+
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
+
+                return Results.Ok(response.Value);
+            })
+            .WithName("GetAllStockMovements")
+            .Produces<IEnumerable<StockMovementResponse>>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("manager"));
+
+            //GET /api/stock-movements/get-history-by-product-id/{productId}
+            group.MapGet("/get-history-by-product-id/{productId}", async ([FromQuery] Guid productId, GetHistoryByProductIdUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(productId);
+
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
+
+                return Results.Ok(response.Value);
+            })
+            .WithName("GetHistoryByProductId")
+            .Produces<IEnumerable<StockMovementResponse>>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("manager"));
+
+            //GET /api/stock-movements/get-history-by-user-id/{userId}
+            group.MapGet("/get-history-by-user-id/{userId}", async ([FromQuery] Guid userId, GetHistoryByUserIdUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(userId);
+
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
+
+                return Results.Ok(response.Value);
+            })
+            .WithName("GetHistoryByUserId")
+            .Produces<IEnumerable<StockMovementResponse>>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("manager"));
+
+            //GET /api/stock-movements/get-history-by-period
+            group.MapGet("/get-history-by-period", async (
+                [FromQuery, Description("AAAA-MM-DD")] DateOnly startDate, 
+                [FromQuery, Description("AAAA-MM-DD")] DateOnly endDate, GetHistoryByPeriodUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(startDate, endDate);
+
+                if (response?.IsFailure == true)
+                {
+                    switch (response.Error?.Code)
+                    {
+                        case "StockMovement.NotFound":
+                            return Results.NotFound(response.Error);
+                        default:
+                            return Results.BadRequest(response.Error);
+                    }
+                }
+
+                return Results.Ok(response?.Value);
+            })
+            .WithName("GetHistoryByPeriod")
+            .Produces<IEnumerable<StockMovementResponse>>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("manager"));
         }
     }
 }

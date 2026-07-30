@@ -19,7 +19,6 @@ namespace InventoryControl.Application
             services.AddScoped<GetAllUsersUseCase>();
             services.AddScoped<CreateProductUseCase>();
             services.AddScoped<UpdateProductUseCase>();
-            services.AddScoped<CreateStockMovementUseCase>();
             services.AddScoped<DeleteProductUseCase>();
             services.AddScoped<GetBySkuUseCase>();
             services.AddScoped<GetLowStockProductsUseCase>();
@@ -29,6 +28,11 @@ namespace InventoryControl.Application
             services.AddScoped<DeleteCategoryUseCase>();
             services.AddScoped<GetByCategoryIdUseCase>();
             services.AddScoped<GetAllCategoriesUseCase>();
+            services.AddScoped<CreateStockMovementUseCase>();
+            services.AddScoped<GetAllStockMovementsUseCase>();
+            services.AddScoped<GetHistoryByProductIdUseCase>();
+            services.AddScoped<GetHistoryByUserIdUseCase>();
+            services.AddScoped<GetHistoryByPeriodUseCase>();
             // ...
 
             return services;

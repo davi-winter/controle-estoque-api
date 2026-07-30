@@ -21,8 +21,6 @@ namespace InventoryControl.API.Endpoints
                 {
                     switch (response.Error?.Code)
                     {
-                        //case "User.NotFound":
-                        //    return Results.NotFound(response.Error);
                         case "User.InvalidCredentials":
                             return Results.Unauthorized();
                         default:
@@ -117,12 +115,6 @@ namespace InventoryControl.API.Endpoints
             .WithName("GetAllUsers")
             .Produces<IEnumerable<UserResponse>>(StatusCodes.Status200OK)
             .RequireAuthorization(p => p.RequireRole("manager"));
-
-            // GET /api/users/me (em testes...)
-            group.MapGet("/me", async (ClaimsPrincipal user) =>
-            {
-                return Results.Ok(user.Identity?.Name);
-            });
         }
     }
 }

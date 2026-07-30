@@ -18,5 +18,21 @@ namespace InventoryControl.Infrastructure.Repositories
             .OrderByDescending(sm => sm.MovedAt)
             .AsNoTracking()
             .ToListAsync();
+
+        public async Task<IEnumerable<StockMovement>> GetHistoryByUserIdAsync(Guid userId)
+            => await _dbSet
+            .Where(sm => sm.UserId == userId)
+            .Include(m => m.User)
+            .OrderByDescending(sm => sm.MovedAt)
+            .AsNoTracking()
+            .ToListAsync();
+
+        public async Task<IEnumerable<StockMovement>> GetHistoryByPeriodAsync(DateOnly startDate, DateOnly endDate)
+            => await _dbSet
+            .Where(sm => DateOnly.FromDateTime(sm.MovedAt) >= startDate && DateOnly.FromDateTime(sm.MovedAt) <= endDate)
+            .Include(m => m.User)
+            .OrderByDescending(sm => sm.MovedAt)
+            .AsNoTracking()
+            .ToListAsync();
     }
 }
