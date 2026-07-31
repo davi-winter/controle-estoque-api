@@ -11,12 +11,12 @@ namespace InventoryControl.Application.UseCases.StockMovements
         public GetHistoryByPeriodUseCase(IStockMovementRepository repository)
             => _repository = repository;
 
-        public async Task<Result<IEnumerable<StockMovementResponse>>> ExecuteAsync(DateOnly startDate, DateOnly endDate)
+        public async Task<Result<IEnumerable<StockMovementResponse>>> ExecuteAsync(DateOnly startDate, DateOnly endDate, int page, int pageSize)
         {
             if (startDate > endDate)
                 return Result<IEnumerable<StockMovementResponse>>.Failure(new Error("StockMovement.InvalidPeriod", "A data de início não pode ser posterior à data de término."));
 
-            var stockMovements = await _repository.GetHistoryByPeriodAsync(startDate, endDate);
+            var stockMovements = await _repository.GetHistoryByPeriodAsync(startDate, endDate, page, pageSize);
 
             if (!stockMovements.Any())
                 return Result<IEnumerable<StockMovementResponse>>.Failure(new Error("StockMovement.NotFound", "Não há movimentações de estoque para o período informado."));

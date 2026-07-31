@@ -22,14 +22,15 @@ namespace InventoryControl.Application
             services.AddScoped<DeleteProductUseCase>();
             services.AddScoped<GetBySkuUseCase>();
             services.AddScoped<GetLowStockProductsUseCase>();
-            services.AddScoped<GetProductsWithCategoryUseCase>();
+            services.AddScoped<GetProductsByCategoryIdUseCase>();
+            services.AddScoped<GetProductsByNameUseCase>();
             services.AddScoped<CreateCategoryUseCase>();
             services.AddScoped<UpdateCategoryUseCase>();
             services.AddScoped<DeleteCategoryUseCase>();
             services.AddScoped<GetByCategoryIdUseCase>();
             services.AddScoped<GetAllCategoriesUseCase>();
             services.AddScoped<CreateStockMovementUseCase>();
-            services.AddScoped<GetAllStockMovementsUseCase>();
+            services.AddScoped<GetStockMovementsUseCase>();
             services.AddScoped<GetHistoryByProductIdUseCase>();
             services.AddScoped<GetHistoryByUserIdUseCase>();
             services.AddScoped<GetHistoryByPeriodUseCase>();

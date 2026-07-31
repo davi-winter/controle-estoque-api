@@ -6,7 +6,8 @@ namespace InventoryControl.Domain.Interfaces.Repositories
     {
         Task<Product?> GetBySkuAsync(Guid id, string sku);
         Task<bool> CategoryExistsAsync(Guid categoryId);
-        Task<IEnumerable<Product>> GetLowStockProductsAsync(int limit);
-        Task<IEnumerable<Product>> GetProductsWithCategoryAsync(Guid categoryId);
+        Task<IEnumerable<Product>> GetLowStockProductsAsync(int limit, int page, int pageSize);
+        Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(Guid categoryId, int page, int pageSize);
+        Task<IEnumerable<Product>> GetProductsByNameAsync(string name, int page, int pageSize);
     }
 }

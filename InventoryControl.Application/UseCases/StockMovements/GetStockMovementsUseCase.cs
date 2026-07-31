@@ -1,20 +1,19 @@
 ﻿using InventoryControl.Application.DTOs.StockMovements;
 using InventoryControl.Application.Validations;
-using InventoryControl.Domain.Entities;
 using InventoryControl.Domain.Interfaces.Repositories;
 
 namespace InventoryControl.Application.UseCases.StockMovements
 {
-    public class GetAllStockMovementsUseCase
+    public class GetStockMovementsUseCase
     {
         private readonly IStockMovementRepository _repository;
 
-        public GetAllStockMovementsUseCase(IStockMovementRepository repository)
+        public GetStockMovementsUseCase(IStockMovementRepository repository)
             => _repository = repository;
 
-        public async Task<Result<IEnumerable<StockMovementResponse>>> ExecuteAsync()
+        public async Task<Result<IEnumerable<StockMovementResponse>>> ExecuteAsync(int page, int pageSize)
         {
-            var stockMovements = await _repository.GetAllAsync("MovedAt", false);
+            var stockMovements = await _repository.GetStockMovementsAsync(page, pageSize);
 
             if (!stockMovements.Any())
                 return Result<IEnumerable<StockMovementResponse>>.Failure(new Error("StockMovement.NotFound", "Não há movimentações de estoque cadastradas."));

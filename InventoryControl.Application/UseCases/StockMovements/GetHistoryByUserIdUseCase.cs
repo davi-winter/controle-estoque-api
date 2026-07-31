@@ -11,9 +11,9 @@ namespace InventoryControl.Application.UseCases.StockMovements
         public GetHistoryByUserIdUseCase(IStockMovementRepository repository)
             => _repository = repository;
 
-        public async Task<Result<IEnumerable<StockMovementResponse>>> ExecuteAsync(Guid userId)
+        public async Task<Result<IEnumerable<StockMovementResponse>>> ExecuteAsync(Guid userId, int page, int pageSize)
         {
-            var stockMovements = await _repository.GetHistoryByUserIdAsync(userId);
+            var stockMovements = await _repository.GetHistoryByUserIdAsync(userId, page, pageSize);
 
             if (!stockMovements.Any())
                 return Result<IEnumerable<StockMovementResponse>>.Failure(new Error("StockMovement.NotFound", "Não há movimentações de estoque para este usuário."));

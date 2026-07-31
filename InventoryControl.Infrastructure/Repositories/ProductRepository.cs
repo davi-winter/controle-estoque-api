@@ -14,19 +14,23 @@ namespace InventoryControl.Infrastructure.Repositories
         public async Task<Product?> GetBySkuAsync(Guid id, string sku)
             => await _dbSet.FirstOrDefaultAsync(p => p.Id != id && p.Sku == sku);
 
-        public async Task<IEnumerable<Product>> GetLowStockProductsAsync(int limit)
+        public async Task<IEnumerable<Product>> GetLowStockProductsAsync(int limit, int page, int pageSize)
             => await _dbSet
                 .Where(p => p.CurrentStock <= limit)
                 .AsNoTracking()
                 .OrderBy(p => p.CurrentStock)
+                .Skip(page * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-        public async Task<IEnumerable<Product>> GetProductsWithCategoryAsync(Guid categoryId)
+        public async Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(Guid categoryId, int page, int pageSize)
             => await _dbSet
                 .Include(p => p.Category)
                 .AsNoTracking()
                 .Where(p => p.CategoryId == categoryId)
                 .OrderBy(p => p.Name)
+                .Skip(page * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
         public async Task<bool> CategoryExistsAsync(Guid categoryId)
@@ -34,5 +38,15 @@ namespace InventoryControl.Infrastructure.Repositories
             var category = await _dbSet.FirstOrDefaultAsync(p => p.CategoryId == categoryId);
             return category != null;
         }
+
+        public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name, int page, int pageSize)
+            => await _dbSet
+                .Include(p => p.Category)
+                .AsNoTracking()
+                .Where(p => EF.Functions.Like(p.Name.ToLower(), $"%{name}%"))
+                .OrderBy(p => p.Name)
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
     }
 }

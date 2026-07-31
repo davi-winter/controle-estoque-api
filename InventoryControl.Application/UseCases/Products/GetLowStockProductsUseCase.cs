@@ -10,9 +10,9 @@ namespace InventoryControl.Application.UseCases.Products
         public GetLowStockProductsUseCase(IProductRepository repository)
             => _repository = repository;
 
-        public async Task<IEnumerable<ProductWithCurrentStockResponse>> ExecuteAsync(int minimumLimit = 10)
+        public async Task<IEnumerable<ProductWithCurrentStockResponse>> ExecuteAsync(int limit = 10, int page = 0, int pageSize = 25)
         {
-            var products = await _repository.GetLowStockProductsAsync(minimumLimit);
+            var products = await _repository.GetLowStockProductsAsync(limit, page, pageSize);
 
             return products
                 .Select(p => 

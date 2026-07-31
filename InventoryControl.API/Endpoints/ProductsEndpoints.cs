@@ -68,9 +68,13 @@ namespace InventoryControl.API.Endpoints
             .RequireAuthorization(p => p.RequireRole("operator"));
 
             // GET /api/products/low-stock
-            group.MapGet("/low-stock", async ([FromQuery] int? limit, GetLowStockProductsUseCase useCase) =>
+            group.MapGet("/low-stock", async (
+                [FromQuery] int? limit, 
+                [FromQuery] int? page, 
+                [FromQuery] int? pageSize, 
+                GetLowStockProductsUseCase useCase) =>
             {
-                var response = await useCase.ExecuteAsync(limit ?? 10);
+                var response = await useCase.ExecuteAsync(limit ?? 10, page ?? 0, pageSize ?? 25);
 
                 return Results.Ok(response);
             })
@@ -78,17 +82,39 @@ namespace InventoryControl.API.Endpoints
             .Produces<IEnumerable<ProductWithCurrentStockResponse>>(StatusCodes.Status200OK)
             .RequireAuthorization(p => p.RequireRole("manager"));
 
-            // GET /api/products/products-with-category
-            group.MapGet("/products-with-category/{categoryId}", async ([FromQuery] Guid categoryId, GetProductsWithCategoryUseCase useCase) =>
+            // GET /api/products/products-by-category
+            group.MapGet("/products-by-category/{categoryId}", async (
+                [FromQuery] Guid categoryId,
+                [FromQuery] int? page,
+                [FromQuery] int? pageSize,
+                GetProductsByCategoryIdUseCase useCase) =>
             {
-                var response = await useCase.ExecuteAsync(categoryId);
+                var response = await useCase.ExecuteAsync(categoryId, page ?? 0, pageSize ?? 25);
 
                 if (response.IsFailure)
                     return Results.NotFound(response.Error);
 
                 return Results.Ok(response.Value);
             })
-            .WithName("GetProductsWithCategory")
+            .WithName("GetProductsByCategoryId")
+            .Produces<IEnumerable<ProductWithCategoryResponse>>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("manager"));
+
+            // GET /api/products/products-by-name
+            group.MapGet("/products-by-name/{name}", async (
+                [FromQuery] string name,
+                [FromQuery] int? page,
+                [FromQuery] int? pageSize,
+                GetProductsByNameUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(name, page ?? 0, pageSize ?? 25);
+
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
+
+                return Results.Ok(response.Value);
+            })
+            .WithName("GetProductsByName")
             .Produces<IEnumerable<ProductWithCategoryResponse>>(StatusCodes.Status200OK)
             .RequireAuthorization(p => p.RequireRole("manager"));
         }

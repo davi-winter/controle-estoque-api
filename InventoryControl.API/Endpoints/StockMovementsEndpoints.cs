@@ -34,9 +34,12 @@ namespace InventoryControl.API.Endpoints
             .RequireAuthorization(p => p.RequireRole("operator"));
 
             // GET /api/stock-movements
-            group.MapGet("/", async (GetAllStockMovementsUseCase useCase) =>
+            group.MapGet("/", async (
+                [FromQuery] int? page,
+                [FromQuery] int? pageSize,
+                GetStockMovementsUseCase useCase) =>
             {
-                var response = await useCase.ExecuteAsync();
+                var response = await useCase.ExecuteAsync(page ?? 0, pageSize ?? 25);
 
                 if (response.IsFailure)
                     return Results.NotFound(response.Error);
@@ -48,9 +51,13 @@ namespace InventoryControl.API.Endpoints
             .RequireAuthorization(p => p.RequireRole("manager"));
 
             //GET /api/stock-movements/get-history-by-product-id/{productId}
-            group.MapGet("/get-history-by-product-id/{productId}", async ([FromQuery] Guid productId, GetHistoryByProductIdUseCase useCase) =>
+            group.MapGet("/get-history-by-product-id/{productId}", async (
+                [FromQuery] Guid productId,
+                [FromQuery] int? page,
+                [FromQuery] int? pageSize,
+                GetHistoryByProductIdUseCase useCase) =>
             {
-                var response = await useCase.ExecuteAsync(productId);
+                var response = await useCase.ExecuteAsync(productId, page ?? 0, pageSize ?? 25);
 
                 if (response.IsFailure)
                     return Results.NotFound(response.Error);
@@ -62,9 +69,13 @@ namespace InventoryControl.API.Endpoints
             .RequireAuthorization(p => p.RequireRole("manager"));
 
             //GET /api/stock-movements/get-history-by-user-id/{userId}
-            group.MapGet("/get-history-by-user-id/{userId}", async ([FromQuery] Guid userId, GetHistoryByUserIdUseCase useCase) =>
+            group.MapGet("/get-history-by-user-id/{userId}", async (
+                [FromQuery] Guid userId,
+                [FromQuery] int? page,
+                [FromQuery] int? pageSize,
+                GetHistoryByUserIdUseCase useCase) =>
             {
-                var response = await useCase.ExecuteAsync(userId);
+                var response = await useCase.ExecuteAsync(userId, page ?? 0, pageSize ?? 25);
 
                 if (response.IsFailure)
                     return Results.NotFound(response.Error);
@@ -78,9 +89,12 @@ namespace InventoryControl.API.Endpoints
             //GET /api/stock-movements/get-history-by-period
             group.MapGet("/get-history-by-period", async (
                 [FromQuery, Description("AAAA-MM-DD")] DateOnly startDate, 
-                [FromQuery, Description("AAAA-MM-DD")] DateOnly endDate, GetHistoryByPeriodUseCase useCase) =>
+                [FromQuery, Description("AAAA-MM-DD")] DateOnly endDate,
+                [FromQuery] int? page,
+                [FromQuery] int? pageSize,
+                GetHistoryByPeriodUseCase useCase) =>
             {
-                var response = await useCase.ExecuteAsync(startDate, endDate);
+                var response = await useCase.ExecuteAsync(startDate, endDate, page ?? 0, pageSize ?? 25);
 
                 if (response?.IsFailure == true)
                 {

@@ -4,18 +4,18 @@ using InventoryControl.Domain.Interfaces.Repositories;
 
 namespace InventoryControl.Application.UseCases.Products
 {
-    public class GetProductsWithCategoryUseCase
+    public class GetProductsByCategoryIdUseCase
     {
         private readonly IProductRepository _repository;
 
-        public GetProductsWithCategoryUseCase(IProductRepository repository)
+        public GetProductsByCategoryIdUseCase(IProductRepository repository)
             => _repository = repository;
 
-        public async Task<Result<IEnumerable<ProductWithCategoryResponse>>> ExecuteAsync(Guid categoryId)
+        public async Task<Result<IEnumerable<ProductWithCategoryResponse>>> ExecuteAsync(Guid categoryId, int page = 0, int pageSize = 25)
         {
             var productValidation = new ProductValidation(_repository);
 
-            var products = await _repository.GetProductsWithCategoryAsync(categoryId);
+            var products = await _repository.GetProductsByCategoryIdAsync(categoryId, page, pageSize);
 
             if (!productValidation.CategoryExists(categoryId))
                 return Result<IEnumerable<ProductWithCategoryResponse>>.Failure(new Error("Category.NotFound", "Categoria não encontrada."));   
