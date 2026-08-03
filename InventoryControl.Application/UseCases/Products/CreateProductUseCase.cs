@@ -56,6 +56,9 @@ namespace InventoryControl.Application.UseCases.Products
             if (!productValidation.CategoryExists(request.CategoryId))
                 return Result<ProductResponse>.Failure(new Error("Product.InvalidCategoryId", "A categoria do produto é inválida."));
 
+            if (productValidation.InactiveCategory(request.CategoryId))
+                return Result<ProductResponse>.Failure(new Error("Product.InactiveCategoryId", "A categoria do produto está inativa."));
+
             var product = new Product
             {
                 Id = Guid.NewGuid(),
@@ -64,6 +67,7 @@ namespace InventoryControl.Application.UseCases.Products
                 Description = request.Description,
                 Price = request.Price,
                 CurrentStock = request.InitialStock,
+                IsActive = request.IsActive,
                 CategoryId = request.CategoryId
             };
             await _productRepository.AddAsync(product);
@@ -87,7 +91,8 @@ namespace InventoryControl.Application.UseCases.Products
                 product.Name,
                 product.Sku,
                 product.Description,
-                product.Price
+                product.Price,
+                product.IsActive
             ));
         }
     }

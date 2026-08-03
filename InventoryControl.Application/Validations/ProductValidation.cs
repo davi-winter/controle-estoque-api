@@ -24,5 +24,8 @@ namespace InventoryControl.Application.Validations
 
         public bool CategoryExists(Guid categoryId)
             => _repository.CategoryExistsAsync(categoryId).Result;
+
+        public bool InactiveCategory(Guid categoryId)
+            => _repository.InactiveCategoryAsync(categoryId).Result;
     }
 }

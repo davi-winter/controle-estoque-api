@@ -5,7 +5,8 @@
         string Name,
         string Sku,
         string Description, 
-        decimal Price);
+        decimal Price,
+        bool IsActive);
 
     public record ProductWithCurrentStockResponse(
     Guid Id,

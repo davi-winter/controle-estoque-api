@@ -23,7 +23,8 @@ namespace InventoryControl.Application.UseCases.Products
                     product.Name,
                     product.Sku,
                     product.Description,
-                    product.Price));
+                    product.Price,
+                    product.IsActive));
         }
     }
 }

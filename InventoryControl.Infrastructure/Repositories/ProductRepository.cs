@@ -16,18 +16,18 @@ namespace InventoryControl.Infrastructure.Repositories
 
         public async Task<IEnumerable<Product>> GetLowStockProductsAsync(int limit, int page, int pageSize)
             => await _dbSet
-                .Where(p => p.CurrentStock <= limit)
+                .Where(p => p.IsActive && p.CurrentStock <= limit)
                 .AsNoTracking()
                 .OrderBy(p => p.CurrentStock)
                 .Skip(page * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-        public async Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(Guid categoryId, int page, int pageSize)
+        public async Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(Guid categoryId, bool includeInactive, int page, int pageSize)
             => await _dbSet
                 .Include(p => p.Category)
                 .AsNoTracking()
-                .Where(p => p.CategoryId == categoryId)
+                .Where(p => (includeInactive || p.IsActive) && p.CategoryId == categoryId)
                 .OrderBy(p => p.Name)
                 .Skip(page * pageSize)
                 .Take(pageSize)
@@ -39,14 +39,26 @@ namespace InventoryControl.Infrastructure.Repositories
             return category != null;
         }
 
+        public async Task<bool> InactiveCategoryAsync(Guid categoryId)
+        {
+            var category = await _dbSet.FirstOrDefaultAsync(p => p.CategoryId == categoryId && !p.Category!.IsActive);
+            return category != null;
+        }
+
         public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name, int page, int pageSize)
             => await _dbSet
                 .Include(p => p.Category)
                 .AsNoTracking()
-                .Where(p => EF.Functions.Like(p.Name.ToLower(), $"%{name}%"))
+                .Where(p => p.IsActive && EF.Functions.Like(p.Name.ToLower(), $"%{name}%"))
                 .OrderBy(p => p.Name)
                 .Skip(page * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+
+        public async Task UpdateStatusProductsByCategoryIdAsync(Guid categoryId, bool isActive)
+        {
+            await _dbSet.Where(p => p.CategoryId == categoryId)
+                .ExecuteUpdateAsync(s => s.SetProperty(p => p.IsActive, isActive));
+        }
     }
 }

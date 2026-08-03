@@ -51,10 +51,14 @@ namespace InventoryControl.Application.UseCases.Products
             if (!productValidation.CategoryExists(request.CategoryId))
                 return Result<ProductResponse>.Failure(new Error("Product.InvalidCategoryId", "A categoria do produto é inválida."));
 
+            if (productValidation.InactiveCategory(request.CategoryId))
+                return Result<ProductResponse>.Failure(new Error("Product.InactiveCategoryId", "A categoria do produto está inativa."));
+
             product.Name = request.Name;
             product.Sku = request.Sku;
             product.Description = request.Description;
             product.Price = request.Price;
+            product.IsActive = request.IsActive;
             product.CategoryId = request.CategoryId;
 
             _repository.Update(product);
@@ -65,7 +69,8 @@ namespace InventoryControl.Application.UseCases.Products
                 product.Name,
                 product.Sku,
                 product.Description,
-                product.Price
+                product.Price,
+                product.IsActive
             ));
         }
     }

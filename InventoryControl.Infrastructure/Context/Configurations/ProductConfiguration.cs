@@ -30,6 +30,9 @@ namespace InventoryControl.Infrastructure.Context.Configurations
             builder.HasIndex(p => p.Sku)
                 .IsUnique();
 
+            builder.Property(p => p.IsActive)
+                .HasDefaultValue(true);
+
             builder.HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)

@@ -85,11 +85,12 @@ namespace InventoryControl.API.Endpoints
             // GET /api/products/products-by-category
             group.MapGet("/products-by-category/{categoryId}", async (
                 [FromQuery] Guid categoryId,
+                [FromQuery] bool? includeInactive,
                 [FromQuery] int? page,
                 [FromQuery] int? pageSize,
                 GetProductsByCategoryIdUseCase useCase) =>
             {
-                var response = await useCase.ExecuteAsync(categoryId, page ?? 0, pageSize ?? 25);
+                var response = await useCase.ExecuteAsync(categoryId, includeInactive ?? false, page ?? 0, pageSize ?? 25);
 
                 if (response.IsFailure)
                     return Results.NotFound(response.Error);

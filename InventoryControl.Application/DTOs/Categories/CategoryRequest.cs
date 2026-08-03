@@ -5,4 +5,9 @@
         string Description,
         bool IsActive = true
     );
+
+    public record ChangeStatusCategoryRequest(
+        Guid Id,
+        bool IsActive
+    );
 }

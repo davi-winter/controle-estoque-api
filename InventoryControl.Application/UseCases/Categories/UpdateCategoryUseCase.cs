@@ -6,20 +6,22 @@ namespace InventoryControl.Application.UseCases.Categories
 {
     public class UpdateCategoryUseCase
     {
-        private readonly ICategoryRepository _repository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IProductRepository _productRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateCategoryUseCase(ICategoryRepository repository, IUnitOfWork unitOfWork)
+        public UpdateCategoryUseCase(ICategoryRepository categoryRepository, IProductRepository productRepository, IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _categoryRepository = categoryRepository;
+            _productRepository = productRepository;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<Result<CategoryResponse>> ExecuteAsync(Guid categoryId, CreateCategoryRequest request)
         {
-            var categoryValidation = new CategoryValidation(_repository);
+            var categoryValidation = new CategoryValidation(_categoryRepository);
 
-            var category = await _repository.GetByIdAsync(categoryId);
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
 
             if (category == null)
                 return Result<CategoryResponse>.Failure(new Error("Category.NotFound", "Categoria não encontrada."));
@@ -43,7 +45,11 @@ namespace InventoryControl.Application.UseCases.Categories
             category.Description = request.Description;
             category.IsActive = request.IsActive;
 
-            _repository.Update(category);
+            _categoryRepository.Update(category);
+
+            // Atualiza o status de todos os produtos associados à categoria
+            await _productRepository.UpdateStatusProductsByCategoryIdAsync(category.Id, request.IsActive);
+
             await _unitOfWork.CommitAsync();
 
             return Result<CategoryResponse>.Success(new CategoryResponse(

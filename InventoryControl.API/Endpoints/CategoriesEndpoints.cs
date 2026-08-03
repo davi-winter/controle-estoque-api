@@ -1,5 +1,6 @@
 ﻿using InventoryControl.Application.DTOs.Categories;
 using InventoryControl.Application.UseCases.Categories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryControl.API.Endpoints
 {
@@ -50,6 +51,20 @@ namespace InventoryControl.API.Endpoints
             })
             .WithName("DeleteCategory")
             .RequireAuthorization(p => p.RequireRole("admin"));
+
+            // PATCH /api/categories/{id}/status
+            group.MapPatch("/{id}/status", async ([FromBody] ChangeStatusCategoryRequest request, ChangeStatusCategoryUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(request);
+
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
+
+                return Results.Ok(response.Value);
+            })
+            .WithName("ChangeStatusCategory")
+            .Produces<CategoryResponse>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("manager"));
 
             //GET /api/categories/{id}
             group.MapGet("/{id}", async (Guid id, GetByCategoryIdUseCase useCase) =>

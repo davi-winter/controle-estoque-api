@@ -11,11 +11,11 @@ namespace InventoryControl.Application.UseCases.Products
         public GetProductsByCategoryIdUseCase(IProductRepository repository)
             => _repository = repository;
 
-        public async Task<Result<IEnumerable<ProductWithCategoryResponse>>> ExecuteAsync(Guid categoryId, int page = 0, int pageSize = 25)
+        public async Task<Result<IEnumerable<ProductWithCategoryResponse>>> ExecuteAsync(Guid categoryId, bool includeInactive = false, int page = 0, int pageSize = 25)
         {
             var productValidation = new ProductValidation(_repository);
 
-            var products = await _repository.GetProductsByCategoryIdAsync(categoryId, page, pageSize);
+            var products = await _repository.GetProductsByCategoryIdAsync(categoryId, includeInactive, page, pageSize);
 
             if (!productValidation.CategoryExists(categoryId))
                 return Result<IEnumerable<ProductWithCategoryResponse>>.Failure(new Error("Category.NotFound", "Categoria não encontrada."));   
