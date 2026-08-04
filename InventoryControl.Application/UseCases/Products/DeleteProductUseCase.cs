@@ -22,6 +22,9 @@ namespace InventoryControl.Application.UseCases.Products
             if (product == null)
                 return Result<bool>.Failure(new Error("Product.NotFound", "Produto não encontrado."));
 
+            if (product.StockMovements.Any())
+                return Result<bool>.Failure(new Error("Product.HasStockMovements", "Não é possível excluir um produto que possui movimentações de estoque."));
+
             _repository.Delete(product);
             await _unitOfWork.CommitAsync();
 

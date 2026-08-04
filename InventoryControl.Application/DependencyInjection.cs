@@ -20,6 +20,7 @@ namespace InventoryControl.Application
             services.AddScoped<CreateProductUseCase>();
             services.AddScoped<UpdateProductUseCase>();
             services.AddScoped<DeleteProductUseCase>();
+            services.AddScoped<ChangeStatusProductUseCase>();
             services.AddScoped<GetBySkuUseCase>();
             services.AddScoped<GetLowStockProductsUseCase>();
             services.AddScoped<GetProductsByCategoryIdUseCase>();

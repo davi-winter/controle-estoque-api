@@ -1,4 +1,6 @@
-﻿using InventoryControl.Application.DTOs.Products;
+﻿using InventoryControl.Application.DTOs.Categories;
+using InventoryControl.Application.DTOs.Products;
+using InventoryControl.Application.UseCases.Categories;
 using InventoryControl.Application.UseCases.Products;
 using InventoryControl.Application.UseCases.StockMovements;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +54,20 @@ namespace InventoryControl.API.Endpoints
             })
             .WithName("DeleteProduct")
             .RequireAuthorization(p => p.RequireRole("admin"));
+
+            // PATCH /api/products/{id}/status
+            group.MapPatch("/{id}/status", async ([FromBody] ChangeStatusProductRequest request, ChangeStatusProductUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(request);
+
+                if (response.IsFailure)
+                    return Results.NotFound(response.Error);
+
+                return Results.Ok(response.Value);
+            })
+            .WithName("ChangeStatusProduct")
+            .Produces<ProductResponse>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("manager"));
 
             //GET /api/products/{sku}
             group.MapGet("/{sku}", async ([FromQuery] string sku, GetBySkuUseCase useCase) =>

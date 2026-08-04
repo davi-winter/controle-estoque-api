@@ -18,4 +18,9 @@
     bool IsActive,
     Guid CategoryId
     );
+
+    public record ChangeStatusProductRequest(
+    Guid Id,
+    bool IsActive
+);
 }

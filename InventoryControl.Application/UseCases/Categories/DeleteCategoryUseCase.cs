@@ -21,6 +21,9 @@ namespace InventoryControl.Application.UseCases.Categories
             if (category == null)
                 return Result<bool>.Failure(new Error("Category.NotFound", "Categoria não encontrada."));
 
+            if (category.Products.Any())
+                return Result<bool>.Failure(new Error("Category.HasProducts", "Não é possível excluir uma categoria que possui produtos."));
+
             _repository.Delete(category);
             await _unitOfWork.CommitAsync();
 
