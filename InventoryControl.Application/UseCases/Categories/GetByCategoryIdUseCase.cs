@@ -18,11 +18,14 @@ namespace InventoryControl.Application.UseCases.Categories
             if (category == null)
                 return Result<CategoryResponse?>.Failure(new Error("Category.NotFound", "Categoria não encontrada."));
 
-            return Result<CategoryResponse?>.Success(new CategoryResponse(
-                category.Id,
-                category.Name,
-                category.Description,
-                category.IsActive));
+            return Result<CategoryResponse?>.Success(
+                new CategoryResponse(
+                    category.Id,
+                    category.Name,
+                    category.Description,
+                    category.IsActive
+                )
+            );
         }
     }
 }

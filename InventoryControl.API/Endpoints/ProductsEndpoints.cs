@@ -66,7 +66,7 @@ namespace InventoryControl.API.Endpoints
                 return Results.Ok(response.Value);
             })
             .WithName("ChangeStatusProduct")
-            .Produces<ProductResponse>(StatusCodes.Status200OK)
+            .Produces<ProductStatusResponse>(StatusCodes.Status200OK)
             .RequireAuthorization(p => p.RequireRole("manager"));
 
             //GET /api/products/{sku}
@@ -95,8 +95,8 @@ namespace InventoryControl.API.Endpoints
                 return Results.Ok(response);
             })
             .WithName("GetLowStockProducts")
-            .Produces<IEnumerable<ProductWithCurrentStockResponse>>(StatusCodes.Status200OK)
-            .RequireAuthorization(p => p.RequireRole("manager"));
+            .Produces<IEnumerable<ProductResponse>>(StatusCodes.Status200OK)
+            .RequireAuthorization(p => p.RequireRole("operator"));
 
             // GET /api/products/products-by-category
             group.MapGet("/products-by-category/{categoryId}", async (
@@ -115,7 +115,7 @@ namespace InventoryControl.API.Endpoints
             })
             .WithName("GetProductsByCategoryId")
             .Produces<IEnumerable<ProductWithCategoryResponse>>(StatusCodes.Status200OK)
-            .RequireAuthorization(p => p.RequireRole("manager"));
+            .RequireAuthorization(p => p.RequireRole("operator"));
 
             // GET /api/products/products-by-name
             group.MapGet("/products-by-name/{name}", async (
@@ -133,7 +133,7 @@ namespace InventoryControl.API.Endpoints
             })
             .WithName("GetProductsByName")
             .Produces<IEnumerable<ProductWithCategoryResponse>>(StatusCodes.Status200OK)
-            .RequireAuthorization(p => p.RequireRole("manager"));
+            .RequireAuthorization(p => p.RequireRole("operator"));
         }
     }
 }

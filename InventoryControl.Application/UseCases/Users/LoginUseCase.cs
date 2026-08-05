@@ -26,12 +26,12 @@ namespace InventoryControl.Application.UseCases.Users
 
             var user = await _userRepository.GetByEmailAsync(Guid.Empty, request.Email);
 
-            //if (user == null)
-            //    return Result<LoginResponse>.Failure(new Error("User.NotFound", "Usuário não encontrado."));
-
             // Validar as credenciais do usuário (verificar se usuário foi encontrado, após pegar a senha e verificar o hash)
             if (user == null || !PasswordHasher.Verify(user.PasswordHash, request.Password))
                 return Result<LoginResponse>.Failure(new Error("User.InvalidCredentials", "Credenciais inválidas."));
+
+            if (PasswordHasher.Verify(user.PasswordHash, request.Password) && user.ForceChangePassword)
+                return Result<LoginResponse>.Failure(new Error("User.ForceChangePassword", "Você deve alterar sua senha antes de continuar. Acesse o endpoint /api/users/change-password."));
 
             var token = _tokenService.GenerateToken(user);
 

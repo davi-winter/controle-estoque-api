@@ -27,7 +27,8 @@ namespace InventoryControl.Application.UseCases.Products
                         p.Description,
                         p.Price,
                         p.Category!.Name)
-                ).ToList());
+                ).ToList()
+            );
         }
     }
 }

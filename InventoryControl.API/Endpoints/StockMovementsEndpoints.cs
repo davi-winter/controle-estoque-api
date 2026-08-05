@@ -3,7 +3,7 @@ using InventoryControl.Application.DTOs.StockMovements;
 using InventoryControl.Application.UseCases.StockMovements;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace InventoryControl.API.Endpoints
 {
@@ -39,6 +39,9 @@ namespace InventoryControl.API.Endpoints
                 [FromQuery] int? pageSize,
                 GetStockMovementsUseCase useCase) =>
             {
+                //if (ClaimsPrincipal.Current?.IsInRole("manager") != true)
+                //    return Results.Forbid();
+
                 var response = await useCase.ExecuteAsync(page ?? 0, pageSize ?? 25);
 
                 if (response.IsFailure)
@@ -46,7 +49,7 @@ namespace InventoryControl.API.Endpoints
 
                 return Results.Ok(response.Value);
             })
-            .WithName("GetAllStockMovements")
+            .WithName("GetStockMovements")
             .Produces<IEnumerable<StockMovementResponse>>(StatusCodes.Status200OK)
             .RequireAuthorization(p => p.RequireRole("manager"));
 

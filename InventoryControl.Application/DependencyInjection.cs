@@ -13,6 +13,7 @@ namespace InventoryControl.Application
             services.AddScoped<CreateUserUseCase>();
             services.AddScoped<UpdateUserUseCase>();
             services.AddScoped<DeleteUserUseCase>();
+            services.AddScoped<ChangePasswordUserUseCase>();
             services.AddScoped<LoginUseCase>();
             services.AddScoped<GetByUsernameUseCase>();
             services.AddScoped<GetByEmailUseCase>();

@@ -86,14 +86,16 @@ namespace InventoryControl.Application.UseCases.Products
 
             await _unitOfWork.CommitAsync();
 
-            return Result<ProductResponse>.Success(new ProductResponse(
-                product.Id,
-                product.Name,
-                product.Sku,
-                product.Description,
-                product.Price,
-                product.IsActive
-            ));
+            return Result<ProductResponse>.Success(
+                new ProductResponse(
+                    product.Id,
+                    product.Name,
+                    product.Sku,
+                    product.Description,
+                    product.Price,
+                    product.CurrentStock
+                )
+            );
         }
     }
 }

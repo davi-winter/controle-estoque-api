@@ -18,12 +18,15 @@ namespace InventoryControl.Application.UseCases.Users
             if (user == null)
                 return Result<UserResponse>.Failure(new Error("User.NotFound", "Usuário não encontrado."));
 
-            return Result<UserResponse>.Success(new UserResponse(
-                user.Id,
-                user.Username,
-                user.Email,
-                user.Role,
-                user.CreatedAt));
+            return Result<UserResponse>.Success(
+                new UserResponse(
+                    user.Id,
+                    user.Username,
+                    user.Email,
+                    user.Role,
+                    user.CreatedAt
+                )
+            );
         }
     }
 }

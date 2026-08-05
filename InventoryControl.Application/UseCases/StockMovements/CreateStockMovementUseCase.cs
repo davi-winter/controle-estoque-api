@@ -23,19 +23,19 @@ namespace InventoryControl.Application.UseCases.StockMovements
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<ProductWithCurrentStockResponse>> ExecuteAsync(StockMovementRequest request)
+        public async Task<Result<ProductResponse>> ExecuteAsync(StockMovementRequest request)
         {
             MovementType movementType;
             var product = await _productRepository.GetByIdAsync(request.ProductId);
 
             if (product == null)
-                return Result<ProductWithCurrentStockResponse>.Failure(new Error("Product.NotFound", "Produto não encontrado."));
+                return Result<ProductResponse>.Failure(new Error("Product.NotFound", "Produto não encontrado."));
 
             if (request.Quantity <= 0)
-                return Result<ProductWithCurrentStockResponse>.Failure(new Error("Product.InvalidQuantity", "Quantidade inválida para o movimento de estoque."));
+                return Result<ProductResponse>.Failure(new Error("Product.InvalidQuantity", "Quantidade inválida para o movimento de estoque."));
 
             if (!request.IsAddition && product.CurrentStock < request.Quantity)
-                return Result<ProductWithCurrentStockResponse>.Failure(new Error("Product.InsufficientStock", "Estoque insuficiente para a saída do produto."));
+                return Result<ProductResponse>.Failure(new Error("Product.InsufficientStock", "Estoque insuficiente para a saída do produto."));
 
             if (request.IsAddition)
             {
@@ -64,14 +64,16 @@ namespace InventoryControl.Application.UseCases.StockMovements
 
             await _unitOfWork.CommitAsync();
 
-            return Result<ProductWithCurrentStockResponse>.Success(new ProductWithCurrentStockResponse(
-                product.Id,
-                product.Name,
-                product.Sku,
-                product.Description,
-                product.Price,
-                product.CurrentStock
-            ));
+            return Result<ProductResponse>.Success(
+                new ProductResponse(
+                    product.Id,
+                    product.Name,
+                    product.Sku,
+                    product.Description,
+                    product.Price,
+                    product.CurrentStock
+                )
+            );
         }
     }
 }

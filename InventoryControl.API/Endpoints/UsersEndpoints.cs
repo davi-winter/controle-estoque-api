@@ -33,6 +33,27 @@ namespace InventoryControl.API.Endpoints
             .WithName("Login")
             .Produces<LoginResponse>(StatusCodes.Status200OK);
 
+            // POST /api/users/change-password
+            group.MapPost("/change-password", async (ChangePasswordRequest request, ChangePasswordUserUseCase useCase) =>
+            {
+                var response = await useCase.ExecuteAsync(request);
+
+                if (response?.IsFailure == true)
+                {
+                    switch (response.Error?.Code)
+                    {
+                        case "User.NotFound":
+                            return Results.NotFound();
+                        default:
+                            return Results.BadRequest(response.Error);
+                    }
+                }
+
+                return Results.Ok(response?.Value);
+            })
+            .WithName("ChangePassword")
+            .Produces<ChangePasswordResponse>(StatusCodes.Status200OK);
+
             // POST /api/users
             group.MapPost("/", async (CreateUserRequest request, CreateUserUseCase useCase) =>
             {
@@ -44,7 +65,7 @@ namespace InventoryControl.API.Endpoints
                 return Results.Created($"/api/users/{response.Value?.Id}", response.Value);
             })
             .WithName("CreateUser")
-            .Produces<UserResponse>(StatusCodes.Status201Created)
+            .Produces<FirstLoginResponse>(StatusCodes.Status201Created)
             .RequireAuthorization(p => p.RequireRole("admin"));
 
             // PUT /api/users/{id}

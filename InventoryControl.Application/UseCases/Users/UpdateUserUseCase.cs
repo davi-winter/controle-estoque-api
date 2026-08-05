@@ -41,12 +41,6 @@ namespace InventoryControl.Application.UseCases.Users
             if (!userValidation.IsEmailUnique(userId, request.Email))
                 return Result<UserResponse>.Failure(new Error("User.EmailExists", "O email informado já está em uso."));
 
-            if (string.IsNullOrWhiteSpace(request.Password))
-                return Result<UserResponse>.Failure(new Error("User.PasswordRequired", "A senha é obrigatória."));
-
-            if (!userValidation.IsPasswordValid(request.Password))
-                return Result<UserResponse>.Failure(new Error("User.InvalidPassword", "A senha informada é inválida. Deve conter pelo menos 8 caracteres, uma letra maiúscula, uma minúscula, um número e um caractere especial."));
-
             if (string.IsNullOrWhiteSpace(request.Role))
                 return Result<UserResponse>.Failure(new Error("User.RoleRequired", "A função é obrigatória."));
 
@@ -55,19 +49,20 @@ namespace InventoryControl.Application.UseCases.Users
 
             user.Username = request.Username;
             user.Email = request.Email;
-            user.PasswordHash = PasswordHasher.Hash(request.Password);
             user.Role = request.Role.ToLower();
 
             _repository.Update(user);
             await _unitOfWork.CommitAsync();
 
-            return Result<UserResponse>.Success(new UserResponse(
-                user.Id,
-                user.Username,
-                user.Email,
-                user.Role,
-                user.CreatedAt
-            ));
+            return Result<UserResponse>.Success(
+                new UserResponse(
+                    user.Id,
+                    user.Username,
+                    user.Email,
+                    user.Role,
+                    user.CreatedAt
+                )
+            );
         }
     }
 }

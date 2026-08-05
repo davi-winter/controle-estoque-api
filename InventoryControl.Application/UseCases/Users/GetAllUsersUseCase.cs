@@ -19,13 +19,16 @@ namespace InventoryControl.Application.UseCases.Users
                 return Result<IEnumerable<UserResponse>>.Failure(new Error("User.NotFound", "Não há usuários cadastrados."));
 
             return Result<IEnumerable<UserResponse>>.Success(
-                users.Select(u =>new UserResponse(
-                    u.Id,
-                    u.Username,
-                    u.Email,
-                    u.Role,
-                    u.CreatedAt)
-                ).ToList());
+                users.Select(u =>
+                    new UserResponse(
+                        u.Id,
+                        u.Username,
+                        u.Email,
+                        u.Role,
+                        u.CreatedAt
+                    )
+                ).ToList()
+            );
         }
     }
 }

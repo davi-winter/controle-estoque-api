@@ -19,12 +19,15 @@ namespace InventoryControl.Application.UseCases.Categories
                 return Result<IEnumerable<CategoryResponse>>.Failure(new Error("Category.NotFound", "Não há categorias cadastradas."));
 
             return Result<IEnumerable<CategoryResponse>>.Success(
-                categories.Select(c => new CategoryResponse(
-                    c.Id,
-                    c.Name,
-                    c.Description,
-                    c.IsActive)
-                ).ToList());
+                categories.Select(c => 
+                    new CategoryResponse(
+                        c.Id,
+                        c.Name,
+                        c.Description,
+                        c.IsActive
+                    )
+                ).ToList()
+            );
         }
     }
 }

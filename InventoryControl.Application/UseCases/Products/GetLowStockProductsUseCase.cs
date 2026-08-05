@@ -10,13 +10,13 @@ namespace InventoryControl.Application.UseCases.Products
         public GetLowStockProductsUseCase(IProductRepository repository)
             => _repository = repository;
 
-        public async Task<IEnumerable<ProductWithCurrentStockResponse>> ExecuteAsync(int limit = 10, int page = 0, int pageSize = 25)
+        public async Task<IEnumerable<ProductResponse>> ExecuteAsync(int limit = 10, int page = 0, int pageSize = 25)
         {
             var products = await _repository.GetLowStockProductsAsync(limit, page, pageSize);
 
             return products
                 .Select(p => 
-                    new ProductWithCurrentStockResponse(
+                    new ProductResponse(
                         p.Id,
                         p.Name,
                         p.Sku,

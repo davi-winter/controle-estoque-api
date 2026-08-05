@@ -33,6 +33,9 @@ namespace InventoryControl.Infrastructure.Context.Configurations
 
             builder.HasIndex(u => u.Email)
                 .IsUnique();
+
+            builder.Property(u => u.ForceChangePassword)
+                .HasDefaultValue(true);
         }
     }
 }

@@ -6,15 +6,15 @@
         string Sku,
         string Description, 
         decimal Price,
-        bool IsActive);
+        int CurrentStock
+    );
 
-    public record ProductWithCurrentStockResponse(
-    Guid Id,
-    string Name,
-    string Sku,
-    string Description,
-    decimal Price,
-    int CurrentStock);
+    public record ProductStatusResponse(
+        Guid Id,
+        string Name,
+        string Sku,
+        bool IsActive
+    );
 
     public record ProductWithCategoryResponse(
         Guid Id,

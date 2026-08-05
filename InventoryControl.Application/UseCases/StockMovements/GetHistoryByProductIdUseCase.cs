@@ -19,17 +19,20 @@ namespace InventoryControl.Application.UseCases.StockMovements
                 return Result<IEnumerable<StockMovementResponse>>.Failure(new Error("StockMovement.NotFound", "Não há movimentações de estoque para este produto."));
 
             return Result<IEnumerable<StockMovementResponse>>.Success(
-                stockMovements.Select(sm => new StockMovementResponse(
-                    sm.Id,
-                    sm.ProductId,
-                    sm.Product?.Name!,
-                    sm.Quantity,
-                    sm.Type.ToString(),
-                    sm.MovedAt,
-                    sm.Observation,
-                    sm.UserId,
-                    sm.User?.Username!
-                )).ToList());
+                stockMovements.Select(sm => 
+                    new StockMovementResponse(
+                        sm.Id,
+                        sm.ProductId,
+                        sm.Product?.Name!,
+                        sm.Quantity,
+                        sm.Type.ToString(),
+                        sm.MovedAt,
+                        sm.Observation,
+                        sm.UserId,
+                        sm.User?.Username!
+                    )
+                ).ToList()
+            );
         }
     }
 }

@@ -18,13 +18,16 @@ namespace InventoryControl.Application.UseCases.Products
             if (product == null)
                 return Result<ProductResponse?>.Failure(new Error("Product.NotFound", "Produto não encontrado."));
                 
-                return Result<ProductResponse?>.Success(new ProductResponse(
+            return Result<ProductResponse?>.Success(
+                new ProductResponse(
                     product.Id,
                     product.Name,
                     product.Sku,
                     product.Description,
                     product.Price,
-                    product.IsActive));
+                    product.CurrentStock
+                )
+            );
         }
     }
 }

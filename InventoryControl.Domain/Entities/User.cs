@@ -8,6 +8,7 @@
         public string PasswordHash { get; set; } = string.Empty;
         public string Role { get; set; } = UserRole.Operator.ToString();
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public bool ForceChangePassword { get; set; } = true;
 
         public enum UserRole
         {
