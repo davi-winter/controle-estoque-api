@@ -1,7 +1,6 @@
 ﻿using InventoryControl.Application.DTOs.Users;
 using InventoryControl.Application.UseCases.Users;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace InventoryControl.API.Endpoints
 {

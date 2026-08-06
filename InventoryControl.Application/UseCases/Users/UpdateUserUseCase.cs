@@ -2,7 +2,6 @@
 using InventoryControl.Application.Validations;
 using InventoryControl.Domain.Entities;
 using InventoryControl.Domain.Interfaces.Repositories;
-using SecureIdentity.Password;
 
 namespace InventoryControl.Application.UseCases.Users
 {

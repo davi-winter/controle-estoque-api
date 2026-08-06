@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace InventoryControl.Application.Validations
+﻿namespace InventoryControl.Application.Validations
 {
     public class Result<T>
     {

@@ -12,5 +12,7 @@ namespace InventoryControl.Infrastructure.Services
             => _httpContextAccessor = httpContextAccessor;
 
         public Guid UserId => Guid.TryParse(_httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var id) ? id : Guid.Empty;
+
+        public IEnumerable<string> Roles => _httpContextAccessor.HttpContext?.User?.FindAll(ClaimTypes.Role).Select(c => c.Value) ?? Enumerable.Empty<string>();
     }
 }

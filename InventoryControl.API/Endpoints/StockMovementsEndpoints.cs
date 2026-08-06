@@ -1,9 +1,9 @@
 ﻿using InventoryControl.Application.DTOs.Products;
 using InventoryControl.Application.DTOs.StockMovements;
 using InventoryControl.Application.UseCases.StockMovements;
+using InventoryControl.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
-using System.Security.Claims;
 
 namespace InventoryControl.API.Endpoints
 {
@@ -39,10 +39,13 @@ namespace InventoryControl.API.Endpoints
                 [FromQuery] int? pageSize,
                 GetStockMovementsUseCase useCase) =>
             {
-                //if (ClaimsPrincipal.Current?.IsInRole("manager") != true)
-                //    return Results.Forbid();
+                var currentUserService = new CurrentUserService(new HttpContextAccessor());
+                var userId = currentUserService.UserId;
 
-                var response = await useCase.ExecuteAsync(page ?? 0, pageSize ?? 25);
+                if (currentUserService.Roles.Contains("manager"))
+                    userId = Guid.Empty; // Gerentes podem ver todas as movimentações de estoque
+
+                var response = await useCase.ExecuteAsync(userId, page ?? 0, pageSize ?? 25);
 
                 if (response.IsFailure)
                     return Results.NotFound(response.Error);
@@ -51,7 +54,7 @@ namespace InventoryControl.API.Endpoints
             })
             .WithName("GetStockMovements")
             .Produces<IEnumerable<StockMovementResponse>>(StatusCodes.Status200OK)
-            .RequireAuthorization(p => p.RequireRole("manager"));
+            .RequireAuthorization(p => p.RequireRole("manager", "operator"));
 
             //GET /api/stock-movements/get-history-by-product-id/{productId}
             group.MapGet("/get-history-by-product-id/{productId}", async (

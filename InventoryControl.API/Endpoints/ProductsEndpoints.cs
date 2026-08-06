@@ -1,8 +1,5 @@
-﻿using InventoryControl.Application.DTOs.Categories;
-using InventoryControl.Application.DTOs.Products;
-using InventoryControl.Application.UseCases.Categories;
+﻿using InventoryControl.Application.DTOs.Products;
 using InventoryControl.Application.UseCases.Products;
-using InventoryControl.Application.UseCases.StockMovements;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryControl.API.Endpoints

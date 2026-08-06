@@ -1,5 +1,4 @@
-﻿using InventoryControl.Domain.Entities;
-using InventoryControl.Domain.Interfaces.Repositories;
+﻿using InventoryControl.Domain.Interfaces.Repositories;
 
 namespace InventoryControl.Application.Validations
 {
