@@ -10,6 +10,8 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool ForceChangePassword { get; set; } = true;
 
+        public virtual ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
+
         public enum UserRole
         {
             Admin,

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryControl.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260805174046_InitialCreate")]
+    [Migration("20260812231345_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -125,11 +125,16 @@ namespace InventoryControl.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("StockMovement", (string)null);
                 });
@@ -204,6 +209,10 @@ namespace InventoryControl.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("InventoryControl.Domain.Entities.User", null)
+                        .WithMany("StockMovements")
+                        .HasForeignKey("UserId1");
+
                     b.Navigation("Product");
 
                     b.Navigation("User");
@@ -215,6 +224,11 @@ namespace InventoryControl.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("InventoryControl.Domain.Entities.Product", b =>
+                {
+                    b.Navigation("StockMovements");
+                });
+
+            modelBuilder.Entity("InventoryControl.Domain.Entities.User", b =>
                 {
                     b.Navigation("StockMovements");
                 });

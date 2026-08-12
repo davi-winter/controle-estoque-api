@@ -3,6 +3,7 @@ using InventoryControl.Application;
 using InventoryControl.Domain.Interfaces.Repositories;
 using InventoryControl.Domain.Interfaces.Services;
 using InventoryControl.Infrastructure.Context;
+using InventoryControl.Infrastructure.Context.Data;
 using InventoryControl.Infrastructure.Repositories;
 using InventoryControl.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -74,6 +75,13 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IStockMovementRepository, StockMovementRepository>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    services.Database.Migrate();
+    DbSeeder.Seed(services);
+}
 
 // app.MapGet("/", () => "Hello World!");
 

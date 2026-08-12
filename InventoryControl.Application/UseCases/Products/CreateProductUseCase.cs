@@ -72,17 +72,20 @@ namespace InventoryControl.Application.UseCases.Products
             };
             await _productRepository.AddAsync(product);
 
-            // Faz o registro do movimento de estoque inicial do produto
-            var stockMovement = new StockMovement
+            // Se houver estoque inicial do produto faz o registro do movimento de estoque
+            if (request.InitialStock > 0)
             {
-                Id = Guid.NewGuid(),
-                ProductId = product.Id,
-                Quantity = request.InitialStock,
-                Type = MovementType.Input,
-                Observation = "Estoque inicial do produto.",
-                UserId = _currentUserService.UserId  // Pega o usuário autenticado no contexto da aplicação
-            };
-            await _stockMovementRepository.AddAsync(stockMovement);
+                var stockMovement = new StockMovement
+                {
+                    Id = Guid.NewGuid(),
+                    ProductId = product.Id,
+                    Quantity = request.InitialStock,
+                    Type = MovementType.Input,
+                    Observation = "Estoque inicial do produto.",
+                    UserId = _currentUserService.UserId  // Pega o usuário autenticado no contexto da aplicação
+                };
+                await _stockMovementRepository.AddAsync(stockMovement);
+            }
 
             await _unitOfWork.CommitAsync();
 

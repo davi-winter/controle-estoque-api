@@ -76,7 +76,8 @@ namespace InventoryControl.Infrastructure.Migrations
                     Type = table.Column<int>(type: "int", nullable: false),
                     MovedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Observation = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -93,6 +94,11 @@ namespace InventoryControl.Infrastructure.Migrations
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StockMovement_User_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "User",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -115,6 +121,11 @@ namespace InventoryControl.Infrastructure.Migrations
                 name: "IX_StockMovement_UserId",
                 table: "StockMovement",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StockMovement_UserId1",
+                table: "StockMovement",
+                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",

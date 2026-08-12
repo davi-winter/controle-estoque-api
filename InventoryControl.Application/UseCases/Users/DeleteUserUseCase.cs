@@ -21,6 +21,9 @@ namespace InventoryControl.Application.UseCases.Users
             if (user == null)
                 return Result<bool>.Failure(new Error("User.NotFound", "Usuário não encontrado."));
 
+            if (user.StockMovements.Any())
+                return Result<bool>.Failure(new Error("User.HasStockMovements", "O usuário possui movimentações de estoque associadas."));
+
             _repository.Delete(user);
             await _unitOfWork.CommitAsync();
 
