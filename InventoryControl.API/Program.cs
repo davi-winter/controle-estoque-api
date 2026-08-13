@@ -4,6 +4,7 @@ using InventoryControl.Domain.Interfaces.Repositories;
 using InventoryControl.Domain.Interfaces.Services;
 using InventoryControl.Infrastructure.Context;
 using InventoryControl.Infrastructure.Context.Data;
+using InventoryControl.Infrastructure.Context.Data.Decorators;
 using InventoryControl.Infrastructure.Repositories;
 using InventoryControl.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -74,6 +75,9 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IStockMovementRepository, StockMovementRepository>();
 
+builder.Services.AddMemoryCache();
+builder.Services.Decorate<ICategoryRepository, CachedCategoryRepository>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -91,7 +95,7 @@ app.UseAuthorization();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.DisplayRequestDuration());
 }
 
 app.UseHttpsRedirection();

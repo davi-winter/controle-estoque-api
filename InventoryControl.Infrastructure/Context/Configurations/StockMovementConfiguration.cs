@@ -25,8 +25,8 @@ namespace InventoryControl.Infrastructure.Context.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(sm => sm.User)
-                .WithMany()
-                .HasForeignKey(sm => sm.UserId)
+                .WithMany(u => u.StockMovements)
+                .HasForeignKey(u => u.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

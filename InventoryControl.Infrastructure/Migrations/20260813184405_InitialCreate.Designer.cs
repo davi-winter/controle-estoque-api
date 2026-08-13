@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryControl.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260812231345_InitialCreate")]
+    [Migration("20260813184405_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -125,16 +125,11 @@ namespace InventoryControl.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UserId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("StockMovement", (string)null);
                 });
@@ -204,14 +199,10 @@ namespace InventoryControl.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("InventoryControl.Domain.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("StockMovements")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("InventoryControl.Domain.Entities.User", null)
-                        .WithMany("StockMovements")
-                        .HasForeignKey("UserId1");
 
                     b.Navigation("Product");
 
