@@ -77,6 +77,7 @@ builder.Services.AddScoped<IStockMovementRepository, StockMovementRepository>();
 
 builder.Services.AddMemoryCache();
 builder.Services.Decorate<ICategoryRepository, CachedCategoryRepository>();
+builder.Services.Decorate<IUserRepository, CachedUserRepository>();
 
 var app = builder.Build();
 

@@ -21,7 +21,7 @@ namespace InventoryControl.Infrastructure.Context.Data.Decorators
 
             return await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
             {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(4);
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(2);
                 return await _innerRepository.GetByIdAsync(id);
             });
         }
@@ -32,7 +32,7 @@ namespace InventoryControl.Infrastructure.Context.Data.Decorators
 
             var categories = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
             {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(4);
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(2);
                 return await _innerRepository.GetAllAsync(sortBy, ascending);
             });
 
@@ -45,7 +45,7 @@ namespace InventoryControl.Infrastructure.Context.Data.Decorators
 
             return await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
             {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(4);
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(2);
                 return await _innerRepository.ExistsByNameAsync(id, name);
             });
         }
