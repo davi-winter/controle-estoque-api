@@ -1,4 +1,4 @@
-﻿using InventoryControl.Application;
+﻿using InventoryControl.Application.Extensions;
 using InventoryControl.Domain.Entities;
 using InventoryControl.Domain.Interfaces.Services;
 using Microsoft.Extensions.Options;

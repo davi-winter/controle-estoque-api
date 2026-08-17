@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryControl.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260813184405_InitialCreate")]
+    [Migration("20260817195013_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -195,7 +195,7 @@ namespace InventoryControl.Infrastructure.Migrations
                     b.HasOne("InventoryControl.Domain.Entities.Product", "Product")
                         .WithMany("StockMovements")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("InventoryControl.Domain.Entities.User", "User")

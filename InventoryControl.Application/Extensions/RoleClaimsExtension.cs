@@ -1,7 +1,7 @@
 ﻿using InventoryControl.Domain.Entities;
 using System.Security.Claims;
 
-namespace InventoryControl.Application
+namespace InventoryControl.Application.Extensions
 {
     public static class RoleClaimsExtension
     {

@@ -1,4 +1,6 @@
-﻿using InventoryControl.Application.DTOs.Products;
+﻿using InventoryControl.Application.DTOs.Categories;
+using InventoryControl.Application.DTOs.Products;
+using InventoryControl.Application.Validations;
 using InventoryControl.Domain.Interfaces.Repositories;
 
 namespace InventoryControl.Application.UseCases.Products

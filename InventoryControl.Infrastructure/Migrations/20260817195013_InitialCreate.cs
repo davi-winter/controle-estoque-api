@@ -86,7 +86,7 @@ namespace InventoryControl.Infrastructure.Migrations
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_StockMovement_User_UserId",
                         column: x => x.UserId,

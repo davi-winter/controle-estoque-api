@@ -32,7 +32,6 @@ namespace InventoryControl.Application.Validations
         {
             // Mínimo de 8 caracteres, uma letra maiúscula, uma minúscula, um número e um caractere especial
             var regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$");
-
             return regex.IsMatch(password);
         }
     }

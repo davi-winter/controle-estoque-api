@@ -16,9 +16,6 @@ namespace InventoryControl.Infrastructure.Repositories
             _dbSet = _context.Set<T>();
         }
 
-        //public async Task<IEnumerable<T>> GetAllAsync()
-        //    => await _dbSet.AsNoTracking().ToListAsync();
-
         public async Task<IEnumerable<T>> GetAllAsync(string? sortBy = null, bool ascending = true)
         {
             IQueryable<T> query = _dbSet.AsNoTracking();

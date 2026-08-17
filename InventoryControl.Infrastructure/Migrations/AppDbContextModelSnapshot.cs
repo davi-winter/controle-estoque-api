@@ -192,7 +192,7 @@ namespace InventoryControl.Infrastructure.Migrations
                     b.HasOne("InventoryControl.Domain.Entities.Product", "Product")
                         .WithMany("StockMovements")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("InventoryControl.Domain.Entities.User", "User")

@@ -1,7 +1,5 @@
-﻿using Bogus.DataSets;
-using InventoryControl.Domain.Entities;
+﻿using InventoryControl.Domain.Entities;
 using InventoryControl.Domain.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace InventoryControl.Infrastructure.Context.Data.Decorators

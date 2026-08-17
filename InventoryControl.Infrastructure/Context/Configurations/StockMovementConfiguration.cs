@@ -22,7 +22,7 @@ namespace InventoryControl.Infrastructure.Context.Configurations
             builder.HasOne(sm => sm.Product)
                 .WithMany(p => p.StockMovements)
                 .HasForeignKey(p => p.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(sm => sm.User)
                 .WithMany(u => u.StockMovements)

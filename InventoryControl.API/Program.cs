@@ -88,8 +88,6 @@ using (var scope = app.Services.CreateScope())
     DbSeeder.Seed(services);
 }
 
-// app.MapGet("/", () => "Hello World!");
-
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -20,7 +20,7 @@ namespace InventoryControl.Infrastructure.Context.Data
                     .RuleFor(u => u.Role, f => f.PickRandom<User.UserRole>().ToString().ToLower())
                     .RuleFor(u => u.CreatedAt, f => f.Date.Past(1))
                     .RuleFor(u => u.ForceChangePassword, f => false)
-                    .Generate(10);
+                    .Generate(10); // Gera 10 usuários
                 context.Users.AddRange(users);
                 context.SaveChanges();
             }
@@ -32,7 +32,7 @@ namespace InventoryControl.Infrastructure.Context.Data
                     .RuleFor(c => c.Name, f => f.Commerce.Department())
                     .RuleFor(c => c.Description, f => f.Commerce.ProductDescription())
                     .RuleFor(c => c.IsActive, f => f.Random.Bool())
-                    .Generate(10);
+                    .Generate(10); // Gera 10 categorias
                 context.Categories.AddRange(categories);
                 context.SaveChanges();
             }
@@ -49,7 +49,7 @@ namespace InventoryControl.Infrastructure.Context.Data
                     .RuleFor(p => p.CurrentStock, f => f.Random.Int(0, 100))
                     .RuleFor(p => p.IsActive, f => f.Random.Bool())
                     .RuleFor(p => p.CategoryId, f => f.PickRandom(categories).Id)
-                    .Generate(200);
+                    .Generate(200); // Gera 200 produtos
                 context.Products.AddRange(products);
                 context.SaveChanges();
             }
@@ -66,7 +66,7 @@ namespace InventoryControl.Infrastructure.Context.Data
                     .RuleFor(sm => sm.Observation, f => f.Lorem.Sentence(5))
                     .RuleFor(sm => sm.UserId, f => f.PickRandom(users).Id)
                     .RuleFor(sm => sm.ProductId, f => f.PickRandom(products).Id)
-                    .Generate(50);
+                    .Generate(50); // Gera 50 movimentações de estoque
                 context.StockMovements.AddRange(stockMovements);
                 context.SaveChanges();
             }
